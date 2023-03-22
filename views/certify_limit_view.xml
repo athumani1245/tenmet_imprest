@@ -1,0 +1,50 @@
+<odoo>
+	<record model="ir.ui.view" id="certify_limit_tree_view">
+        <field name="name">imprest_application_certify_limit_tree_view</field>
+        <field name="model">certify.limit</field>
+        <field name="arch" type="xml">
+            <tree string="Certify Limit">
+                <field name="name"/>
+                <field name="user_id" widget="many2many_tags"/>
+                <field name="date"/>
+                <field name="initial_amount" string="Initial Amount"/>
+                <field name="final_amount" string="Final Amount"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="certify_limit_form_view">
+        <field name="name">certify_limit_form_view</field>
+        <field name="model">certify.limit</field>
+        <field name="arch" type="xml">
+            <form string="Certify Limit">
+                <group>
+                <field name="name" String="Approval Role"/>
+                <field name="user_id" String="User Name"  widget="many2many_tags" />
+                <field name="date" String="Approval set Date"/>
+            </group>
+            <group></group>
+            <group>
+
+               <field name="initial_amount" String="Initial Amount"/>
+                <field name="final_amount" String="Final Amount"/>
+            </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="menu_certify_limit_action" model="ir.actions.act_window">
+        <field name="name">Certify Limit</field>
+        <field name="res_model">certify.limit</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+     <menuitem id="menu_imprest_set_certify_limit"
+                  name="Certify Limit"
+                  sequence="1"
+                  parent="mst_imprest.menu_imprest_limit"
+                  action="menu_certify_limit_action"
+                  />
+
+
+</odoo>

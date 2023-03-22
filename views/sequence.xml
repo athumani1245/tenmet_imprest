@@ -1,0 +1,23 @@
+<odoo>
+    <data>
+
+<!--        Imprest Application Sequence-->
+        <record model="ir.sequence" id="seq_imprest_application">
+            <field name="name">Imprest Application</field>
+            <field name="code">imprest.application</field>
+            <field name="prefix">IMA/</field>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+        </record>
+
+<!--        Imprest Retirement Sequence-->
+        <record model="ir.sequence" id="seq_imprest_retirement">
+            <field name="name">Imprest Retirement</field>
+            <field name="code">imprest.retirement</field>
+            <field name="prefix">IMR/</field>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+        </record>
+
+    </data>
+</odoo>

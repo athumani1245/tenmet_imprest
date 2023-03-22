@@ -1,0 +1,1050 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+    
+        <record model="ir.ui.view" id="extension_imprest_form_viewz">
+            <field name="name">extension_imprest_form_view</field>
+            <field name="model">extension.imprest.application</field>
+            <field name="arch" type="xml">
+                <form string="Imprest Due Date Extension">
+                    <header>
+                           <button name="action_draft"  type="object" string="Reset to Draft" states="rejected"/>
+
+                            <button name="action_submitted" type="object" string="Submit" class="oe_highlight" states="draft" />
+
+                           <button name="action_authorized"  type="object" string="Authorize" class="oe_highlight" groups="tenmet_imprest.group_imprest_approver" states="training" />
+                           <button name="action_training"  type="object" string="Approve Training" class="oe_highlight" groups="tenmet_imprest.group_imprest_approver" states="submited" />
+
+                           <!-- <button name="action_certified"   type="object" string="Certify" class="oe_highlight" groups="tenmet_imprest.group_imprest_approver" states="authorized" />
+
+                          <button name="action_approved"   type="object" string="Approve" class="oe_highlight" groups="tenmet_imprest.group_imprest_approver" states="certified" /> -->
+
+                        <button name="reminder"   type="object" class="btn-warning" string="Reminder" attrs="{'invisible': [('state', 'in', ('draft', 'rejected'))]}"/>
+
+                        <button name="reject" type="object"   class="btn-danger" string="Reject" states="approved,verify,assign_project_codes,certified,authorized,submitted,country_director,finance_director,finance_lead,account1,account2,post,posted,retired" groups="tenmet_imprest.group_imprest_approver"/>
+
+                        <field name="state" widget="statusbar" options="{'fold_field': 'fold'}" clickable="0"/>
+
+                    </header>
+                    <sheet>
+                     <group>
+                         <group>
+                             <field name="name" required="1"/>
+                             <field name="created_by_id" invisible="1"/>
+                             <field name="date" readonly="1"/>
+                             <field name="dateStart" readonly="1"/>
+                             <field name="dateEnd" readonly="1"/>
+                         </group>
+                         <group>
+                            <field name="imprest_type" readonly="1"/>
+                            <field name="purpose" readonly="1"/>
+                            <field name="dateCreate" readonly="1"/>
+                            <field name="dateExt" required="1"/>
+                         </group>
+                     </group>
+                           <notebook>
+                                 <page string="Approvals">
+                                <group>
+                                        <field name="current_user" invisible="1"/>
+                                        <field name="authorizer_id" />
+                                        <field name="certifier_id" widget="many2many_tags"/>
+                                        <field name="approver_id" widget="many2many_tags"/>
+                                </group>
+                                     <group>
+
+                                     </group>
+                            </page>
+
+                        </notebook>
+
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+<!--        treee view for imprest extension-->
+        <record model="ir.ui.view" id="extension_imprest_tree_viewz">
+            <field name="name">imprest_extension_tree_view</field>
+            <field name="model">extension.imprest.application</field>
+            <field name="arch" type="xml">
+            <tree string="Advance Application">
+                   <field name="name"/>
+                    <field name="date"/>
+                    <field name="imprest_type" />
+                    <field name="state" string="status"/>
+            </tree>
+            </field>
+
+        </record>
+
+<!--        treee view for imprest extension-->
+
+
+<!--        Imprest Application-->
+        <record model="ir.ui.view" id="imprest_application_form_view">
+            <field name="name">imprest_application_form_view</field>
+            <field name="model">imprest.application</field>
+            <field name="arch" type="xml">
+                <form string="Imprest Application">
+<!--our header commented by benjamin-->
+
+
+<!--                    muhind header ben modifier-->
+                     <header>
+                        <button name="action_draft"  type="object" string="Reset to Draft" states="rejected"/>
+
+                        <button name="action_submitted" type="object" string="Submit" class="oe_highlight" states="draft" />
+
+                         <button name="action_fleet"  type="object" string="Approve Fleet" class="oe_highlight" groups="tenmet_imprest.group_imprest_fleet" states="training" />
+
+                        <button name="action_authorized"  type="object" string="Authorize" class="oe_highlight" groups="tenmet_imprest.group_imprest_approver" states="fleet_manager" />
+                        <button name="action_training"  type="object" string="Approve Training" class="oe_highlight" groups="tenmet_imprest.group_imprest_approver" states="submitted" />
+
+                        <!-- <button name="action_certified"   type="object" string="Certify" class="oe_highlight" groups="tenmet_imprest.group_imprest_approver" states="authorized" />
+
+                        <button name="action_approved"   type="object" string="Approve" class="oe_highlight" groups="tenmet_imprest.group_imprest_approver" states="certified" /> -->
+
+                        <button name="reminder"   type="object" class="btn-warning" string="Reminder" attrs="{'invisible': [('state', 'in', ('draft','rejected','posted','retired','completed'))]}"/>
+
+                        <button name="action_pay_review"   type="object" string="Accountant 1 Review (P.A 1)" class="oe_highlight" groups="tenmet_imprest.group_imprest_approver" attrs="{'readonly': [('is_first_finacial_verify', '=',True)]}" states="verify" />
+
+                        <!-- <button name="action_pm_verify"   type="object" string="Pm Assign | Funder | DRL" class="oe_highlight" groups="project.group_project_manager" states="approved" /> -->
+
+                        <button name="action_fn_verify"   type="object" string="Finance Officer Verify (F.O)" class="oe_highlight" groups="tenmet_imprest.group_imprest_approver" states="authorized" />
+
+                        <button name="action_first_finacial_review"   type="object" string="Accountant 2 Approve (P.A 2)" class="oe_highlight" groups="tenmet_imprest.group_imprest_approver" attrs="{'readonly': [('state', 'not in', ('account1', 'account2')), ('is_first_finacial_verify', '=',False)]}" states="account1" />
+
+                        <button name="action_finance_lead_approve"   type="object" string="Finance Lead Approve (F.L)" class="oe_highlight" groups="tenmet_imprest.group_imprest_approver" states="account2" />
+
+                        <button name="action_finance_director_approve"   type="object" string="Finance Director Approve (F.D)" class="oe_highlight" groups="tenmet_imprest.group_imprest_approver" states="finance_lead" />
+
+                        <button name="action_country_director_approve"   type="object" string="Country Director Approve (C.D)" class="oe_highlight" groups="tenmet_imprest.group_imprest_approver" states="finance_director" />
+
+                        <button name="action_post"   type="object" string="Post" class="oe_highlight" groups="tenmet_imprest.group_imprest_paypost" states="country_director" />
+
+                        <button name="action_pay" type="object"   string="Pay" class="oe_highlight" groups="tenmet_imprest.group_imprest_paypost" states="post"/>
+
+                        <button name="action_retired" type="object"    string="Process Retirement" class="oe_highlight" states="posted" groups="tenmet_imprest.group_imprest_paypost" />
+<!-- 
+                        <button name="action_reset_to_posted"   type="object" string="Reset to Paid" states="retired" groups="tenmet_imprest.group_imprest_paypost" /> -->
+
+
+                        <button name="reject" type="object"   class="btn-danger" string="Reject" states="fleet_manager,approved,verify,assign_project_codes,certified,authorized,submitted,country_director,finance_director,finance_lead,account1,account2,post" groups="tenmet_imprest.group_imprest_approver"/>
+
+                         <style>
+
+                         </style>
+
+                         <!-- this is for imprest clickable -->
+                         <field name="state" widget="statusbar" options="{'fold_field': 'fold'}" clickable="1" statusbar_visible="draft,submitted,training,fleet_manager,authorized,verify,account1,account2,finance_lead,finance_director,country_director,post,posted,retired,completed,rejected"/>
+
+        <!-- this is for imprest clickable -->
+                        
+                    </header>
+
+
+                    <sheet>
+
+                        <div class="oe_button_box" name="button_box">
+
+                            <button name="view_imprest_posting"
+                                    type="object"
+                                    class="oe_stat_button"
+                                    string="View Posting"
+                                    attrs="{'invisible': [('state', 'not in', ('posted', 'retired'))]}"
+                                    icon="fa-list"/>
+
+                            <button name="view_retirement"
+                                    type="object"
+                                    class="oe_stat_button"
+                                    string="View Retirement"
+                                    attrs="{'invisible': [('state', '!=', 'retired')]}"
+                                    icon="fa-money"/>
+
+                        </div>
+
+                       <div class="oe_title row mx-4">
+                           <h5 class="bg-info px-4 py-2"><field name='message_to_retire'/></h5>
+                        </div>
+                        <div class="oe_title row mx-4">
+                            <label for="name" string="MST Imprest"/>
+                            <h1 class="text-warning">
+                                <field name="name"/>
+                            </h1>
+                           <h4 class="text-danger">"NOTE: <i class="text-info">Please make sure you confirm your entries before submitting this action can not be reversed.</i>"</h4>
+                           <h5><field name='message_to_retire'/></h5>
+                        </div>
+
+
+                        <group>
+                            <group>
+                                <field name="applicant_id" readonly='1'/>
+                                <field name="application_type" attrs="{'readonly':[('state','not in','draft')]}" />
+                                <field name="retirement_ref" readonly="1"/>
+                                <field name="created_by_id" invisible="1"/>
+                                <field name="date" readonly="1"/>
+                                <field name="dateStart" placeholder="Enter the activity start date" attrs="{'readonly':[('state','not in','draft')],'required':[('state','in',['draft','submitted','fleet_manager'])]}"/>
+                                <field name="dateEnd" placeholder="Enter the activity end date" attrs="{'readonly':[('state','not in','draft')],'required':[('state','in',['draft','submitted','fleet_manager'])]}"/>
+                                <field name="dateDue" placeholder="Will apper after 5 days from Finance Stage" attrs="{'readonly':[('state','not in','draft')],'required':[('state','in',['draft','submitted','fleet_manager'])]}" required="1"/>
+<!--                                 <field name="project" attrs="{'readonly':[('state','not in','draft')]}"/>
+ -->                            <field name="purpose" placeholder="Enter the purpose of imprest" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            </group>
+                            <group>
+
+                               <field name="imprest_type" String="Imprest Type" attrs="{'readonly':[('state','not in','draft')],'required':[('state','in',['draft','submitted','fleet_manager'])]}"/>
+                                <field name="currency_id" String="Currency" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                <field name="authorizer_id_domain" String="Author Domain" invisible="1"/>
+
+                                 <field name="imprest_activity" attrs="{'readonly':[('state','not in','draft')],'required':[('state','in',['draft','submitted','fleet_manager'])]}"/>
+                                 <field name="is_training" attrs="{'readonly':[('state','not in','draft')],'required':[('state','in',['draft','submitted','fleet_manager'])]}"/>
+                                 <field name="is_fleet" widget="salection" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                 <field name="imprest_fleet" widget="selection" attrs="{'invisible':[('is_fleet','=','no')],'required':[('is_fleet','=','no')],'readonly':[('state','not in',('draft','submitted'))]}"/>
+                                 <field name="imprest_driver" widget="selection" attrs="{'invisible':[('imprest_fleet','!=','car')],'required':[('imprest_fleet','=','car')],'readonly':[('state','not in',('draft','submitted'))]}"/>
+                                 <field name="imprest_millage" widget="monetory" attrs="{'invisible':[('imprest_fleet','!=','car')],'required':[('imprest_fleet','=','car')],'readonly':[('state','not in',('draft','submitted'))]}"/>
+
+
+
+                                <field name="grand_total" string="Total Amount Requested"/>
+                                <field name="show_tab_project" invisible='1' string="is showing"/>
+
+
+            
+
+                            </group>
+                        </group>
+
+                        <notebook>
+
+                            <page string="Imprest Lines">
+                                <field name="imprest_application_line_ids" attrs="{'readonly':[('state','not in',['draft','assign_project_codes'])]}" widget="section_and_note_one2many">
+                                    <tree string="Imprest Lines" editable="bottom">
+                                         <control>
+                                            <create name="add_product_control" string="Add a Imprest" />
+<!--                                            <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}" />-->
+<!--                                            <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}" />-->
+                                        </control>
+<!--                                        <field name="employee_id" options="{'no_quick_create': True, 'no_create_edit' : True}" attrs="{'invisible': [('parent.imprest_type', '=', 'individual')]}" required="1" />-->
+                                        <field name="employee_id" options="{'no_quick_create': True, 'no_create_edit' : True}" attrs="{'invisible': [('parent.imprest_type', '=', 'individual')],'required':[('parent.imprest_type', '=', 'group')]}" />
+                                        <field name="manager" options="{'no_quick_create': True, 'no_create_edit' : True}" attrs="{'invisible': [('parent.imprest_type', '=', 'individual')],'required':[('parent.imprest_type', '=', 'group')]}" />
+                                        <field name="name" widget="section_and_note_text" required="1"/>
+                                        <field name="display_type" invisible="1" />
+                                        <field name="product_uom_id" options="{'no_quick_create': True, 'no_create_edit' : True}" />
+                                        <field name="quantity" />
+                                        <field name="unit_price" />
+                                        <field name="line_total" />
+                                        <field name="lead_state" /> 
+                                        <button name="approve_member" type="object" class="btn-success fa fa-check"/>
+                                        <button name="group_reject_member" type="object" class="btn-danger fa fa-trash"/>
+ <!-- groups="tenmet_imprest.group_imprest_approver" -->
+                                    </tree>
+                                </field>
+                                                <group class="oe_right oe_subtotal_footer">
+                                    <!-- <group class=""> -->
+                                        <field name="imprest_total" widget="monetary" string="Imprest Total"/>
+                                        <field name="general_total" widget="monetary" string="General Total"/>
+                                        <field name="non_mst_total" widget="monetary" string="Non Mst Total"/>
+                                        <field name="grand_total" class="oe_subtotal_footer_separator" widget="monetary" string="Grand Total"/>
+                                    <!-- </group> -->
+                                </group>
+               
+                            </page>
+                           
+
+<!-- groups="tenmet_imprest.group_imprest_approver"  -->
+                                 <!-- authorized -->
+                             <page string="Project Lines"   attrs="{'invisible':[('state','in','draft')],'readonly':[('state','not in','fleet_manager')]}">
+                                <field name="imprest_application_project_line_ids"   attrs="{'readonly':[('state','not in','fleet_manager')]}">
+                                <!-- ,'invisible':[('show_tab_project','=',False)] -->
+                                    <tree string="Imprest Lines"  editable="bottom">
+                                        <field name="manager_confirmed" invisible='1'/>
+                                        <field name="project_ids" required="1" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
+                                        <field name="project_manager"/>
+                                        <field name="project_percentage" required="1"/>
+                                        <field name="project_code" />
+                                       <!--  <field name="project_line"/> -->
+                                        <field name="project_funder"  attrs="{'readonly':[('manager_confirmed','!=',True)]}"/>
+                                        <field name="project_amount" />
+<!--                                        <field name="project_drl"  attrs="{'readonly':[('manager_confirmed','!=',True)]}"/>-->
+                                    </tree>
+                                </field>
+                               
+
+                                 <group class="oe_right">
+                                    <group class="oe_subtotal_footer">
+                                        <field name="project_parcentage_total"/>
+                                    </group>
+                                </group>
+
+                                 
+
+ 
+                            </page>
+
+
+
+<!--                            benja bew DRL view-->
+<!-- groups="tenmet_imprest.group_imprest_approver"  -->
+                            <page string="Projec DRL" attrs="{'invisible':[('state','in','draft')]}">
+                                <field name="imprest_application_project_line_drl"    attrs="{'readonly':[('state','not in',('authorized','fleet_manager'))]}" >
+                                    <tree string="Project DRL"  editable="bottom">
+                                       <field name="drl_code" required="1" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
+                                       <field name="drl_rel" invisible="1"/>
+                                       <field name="drl_percent"/>
+                                       <field name="drl_amount"/>
+                                        <field name="totalDrl" string="Total to contribute"/>
+
+                                    </tree>
+                                </field>
+
+
+                                 <group class="oe_right">
+                                    <group class="oe_subtotal_footer">
+                                    <!--     <field name="drl_percent_total" string="DRL Total %"/> -->
+                                         <field name="drl_to_display"/>
+                                    </group>
+                                </group>
+
+
+
+
+                            </page>
+
+<!--                            benja bew DRL view-->
+
+                              <page string="Approvals">
+                                <group>
+                                    <group>
+                                        <field name="current_user" invisible="1"/>
+<!--                                        Fleet manager-->
+
+                                        <field name="fleet_id" attrs="{'readonly':[('state','not in',['draft']),('is_fleet','=','no')],'required':[('is_fleet','=','yes')]}"/>
+
+<!--                                        Fleet manager-->
+                                        <field name="authorizer_id" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                        <field name="compute" invisible="1"/>
+                                        <field name="group_authorize"  widget="many2many_tags"/>
+                                        <field name="compute_pms" invisible="1"/>
+                                        <field name="certifier_id" options="{'no_quick_create': True, 'no_create_edit' : True}" widget="many2many_tags" domain="[('id','=',compute)]"  attrs="{'readonly':[('state','in',('draft','post','posted','retired','completed','rejected'))]}" />
+                                        <field name="compute_approvers" invisible="1"/>
+                                        <field name="approver_id" options="{'no_quick_create': True, 'no_create_edit' : True}" widget="many2many_tags" domain="[('id','=',compute_approvers)]" attrs="{'readonly':[('state','in',('draft','post','posted','retired','completed','rejected'))]}"/>
+                                        <field name="pm_approver_id"  widget="many2many_tags" domain="[('id','=',compute_pms)]"  attrs="{'readonly':[('state','in',('draft','post','posted','retired','completed','rejected'))]}" />
+                                        <field name="verify_id" options="{'no_quick_create': True, 'no_create_edit' : True}" attrs="{'readonly':[('state','in',('draft','post','posted','retired','completed','rejected'))]}"/>
+                                        <field name="account1_id" options="{'no_quick_create': True, 'no_create_edit' : True}" attrs="{'invisible':[('state','not in',('assign_project_codes','account1','account2','finance_lead','finance_director','country_director','verify','post','posted','rejected','retired'))],'required':[('state', 'in','assign_project_codes')],'readonly':[('state','in',('draft','post','posted','retired','completed','rejected'))]}" />
+                                        <field name="account2_id" options="{'no_quick_create': True, 'no_create_edit' : True}" attrs="{'invisible':[('state','not in',('assign_project_codes','account1','account2','finance_lead','finance_director','country_director','verify','post','posted','rejected','retired'))],'readonly':[('state','in',('draft','post','posted','retired','completed','rejected'))]}" />
+                                        <field name="finance_lead_id" options="{'no_quick_create': True, 'no_create_edit' : True}"  attrs="{'readonly':[('state','in',('draft','post','posted','retired','completed','rejected'))]}"/>
+                                        <field name="finance_director_id" options="{'no_quick_create': True, 'no_create_edit' : True}" attrs="{'readonly':[('state','in',('draft','post','posted','retired','completed','rejected'))]}"/>
+                                        <field name="country_dir_id" options="{'no_quick_create': True, 'no_create_edit' : True}" invisible="1"  attrs="{'readonly':[('state','in',('draft','post','posted','retired','completed','rejected'))]}"/>
+                                        <field name="post_id" options="{'no_quick_create': True, 'no_create_edit' : True}" attrs="{'readonly':[('state','in',('draft','post','posted','retired','completed','rejected'))]}"/>
+                                        <field name="paid_id" options="{'no_quick_create': True, 'no_create_edit' : True}" attrs="{'readonly':[('state','in',('draft','post','posted','retired','completed','rejected'))]}"/>
+                                        <field name="retired_id" invisible="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="is_authorizer" invisible="1"/>
+                                        <!-- <field name="is_certifier" invisible="1"/> -->
+                                        <field name="is_approver" invisible="1"/>
+                                        <field name="is_first_finacial_verify" invisible="1"/>
+                                        <field name="is_second_finacial_verify" invisible="1"/>
+                                        <field name="is_third_finacial_verify" invisible="1"/>
+                                        <field name="is_fourth_finacial_verify" invisible="1"/>
+                                        
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="General">
+                                <field name="general_ids" help="This is generic cost" nolabel="1" attrs="{'readonly':[('state','not in',['draft','assign_project_codes'])]}">
+                                    <tree editable="bottom">
+                                        <field name="item_description" required="1"/>
+                                        <field name="uom_id" required="1"/>
+                                        <field name="qty" required="1"/>
+                                        <field name="price" required="1"/>
+                                        <field name="sub_total"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_right">
+                                    <group class="oe_subtotal_footer">
+                                        <field name="general_total" widget="monetary" />
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Non MST Staffs" >
+                                <field name="nonmst_id" nolabel="1" attrs="{'readonly':[('state','not in',('draft','assign_project_codes'))]}" help="For all non mst staff costs write it here">
+                                    <tree editable="bottom">
+                                        <field name="item_description" required="1" placeholder="You can enter names or any description" string="Descriptions"/>
+                                        <field name="uom_id"/>
+                                        <field name="qty"/>
+                                        <field name="price" string="Amount"/>
+                                        <field name="sub_total" string="Total per line"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_right">
+                                    <group class="oe_subtotal_footer">
+                                        <h5  class="text-dander">
+                                        <field name="non_mst_total" widget="monetary" />
+                                        </h5>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Fleet" attrs="{'invisible':[('imprest_fleet','!=','plane'),('is_fleet','=','no')],'required':[('imprest_fleet','=','plane')],'readonly':[('state','not in',('draft','submitted'))]}">
+                                <field name="fleet_lines_ids" nolabel="1"  help="for all fleets here">
+                                    <tree editable="bottom">
+                                        <field name="applicant" required="1"/>
+                                        <field name="fleet_from"/>
+                                        <field name="fleet_to"/>
+                                        <field name="dep_date"/>
+                                        <field name="ret_date"/>
+                                        <field name="fleet_time"/>
+                                        <field name="fleet_category"/>
+                                        <field name="fleet_cost" string="Fleet Cost"/>
+                                        
+                                    </tree>
+                                </field>
+                                <!-- <group class="oe_right">
+                                    <group class="oe_subtotal_footer">
+                                        <h5  class="text-dander">
+                                        <field name="total_fleet_amount" widget="monetary" />
+                                        </h5>
+                                    </group>
+                                </group> -->
+                            </page>
+
+
+
+
+                        </notebook>
+                
+
+                    </sheet>
+
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="fleet_application_tree_view">
+            <field name="name">fleet.application.tree.views</field>
+            <field name="model">imprest.fleet.application</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="imprest_ref_id"/>
+                    <field name="date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="fleet_application_form_view">
+            <field name="name">fleet.application.views</field>
+            <field name="model">imprest.fleet.application</field>
+            <field name="arch" type="xml">
+
+                <form string="imprest fleet epplications">
+
+                    <!-- addition of header for approval buttons states-->
+                    <header>
+                       <button name="action_approve" type="object" string="Approve" class="oe_highlight" states="submitted" />
+                       <button name="action_reset" type="object" string="Reset Application" class="oe_highlight" states="cancelled" />
+                       <button name="action_certify" type="object" string="Certify" class="oe_highlight" states="approved" />
+                       <button name="action_reject" type="object" string="Reject" class="btn btn-danger" attrs="{'invisible': [('state', 'in', ('submitted','cancelled'))]}"/>
+                       <field name="state" widget="statusbar" options="{'fold_field': 'fold'}" clickable="1"/>
+                    </header>
+                    
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="fleet_applicant_id" required="1"/>
+                                <field name="date" readonly="0"/>
+                                <field name="imprest_ref_id" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Approvals">
+                                <group>
+                                    <field name="certifier_id" />
+                                    <field name="approver_id"/>
+                                </group>
+                            </page>
+
+                            <page string="Fleet Lines">
+                                    <field name="fleet_lines_ids" widget="section_and_note_one2many">
+                                        <tree string="Fleet Lines" editable="bottom">
+                                            <field name="applicant" />
+                                            <field name="fleet_from" />
+                                            <field name="fleet_to" />
+                                            <field name="fleet_time" />
+                                            <field name="fleet_cost" />
+                                            <field name="dep_date" />
+                                            <field name="ret_date" />
+                                            <field name="fleet_category" />
+                                        </tree>
+                                    </field>
+                                    <group class="oe_right">
+                                        <group class="oe_subtotal_footer">
+                                            <field name="fleet_total" widget="monetary" string="Total Fleet Costs"/>
+                                        </group>
+                                    </group>
+                                </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+
+
+<!--        Imprest Application line Tree View-->
+        <record model="ir.ui.view" id="imprest_application_tree_view_lines">
+            <field name="name">imprest_application_lines_tree_view</field>
+            <field name="model">imprest.application.lines</field>
+            <field name="arch" type="xml">
+                <tree string="Advance Application Lines">
+                    <field name="employee_id"/>
+                    <field name="name"/>
+                    <!-- <field name="product_uom_id"/> -->
+                    <field name="quantity"/>
+                    <!-- <field name="unit_price"/> -->
+                    <!-- <field name="lead_state"/> -->
+                    <field name="state"/>
+                    <field name="line_total" string="status"/>
+                    <button string="approve" name="approve_member" class="btn btn-success fa fa-bandcamp"/>
+                </tree>
+            </field>
+        </record>
+
+
+<!--        Imprest Application Tree View-->
+        <record model="ir.ui.view" id="imprest_application_tree_view">
+            <field name="name">imprest_application_tree_view</field>
+            <field name="model">imprest.application</field>
+            <field name="arch" type="xml">
+                <tree string="Advance Application">
+                    <field name="name"/>
+                    <field name="applicant_id"/>
+                    <field name="application_type" string="Application Type"/>
+                    <field name="date"/>
+                    <field name="grand_total" string="Amount Requested"/>
+                    <field name="state" string="status"/>
+                </tree>
+            </field>
+        </record>
+
+
+
+
+        <record id="project_form_inherit" model="ir.ui.view">
+            <field name="name">project.project.view.form.inherit</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/notebook/page/group/group/field[@name='user_id']" position="after">
+                    <field name="funder"/>
+                    <field name="pcode"/>
+                    <field name="status"/>
+                    <field name="budget"/>
+                </xpath>
+                <notebook>
+                    <page string="DRLS Budget Divisions">
+                        <field name="drl_relation" widget="section_and_note_one2many">
+                            <tree editable="bottom">
+                                <field name="name" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
+                                <field name="project_id" readonly="1"/>
+                                <field name="amount" />
+                            </tree>
+                        </field>
+                        <group class="oe_right">
+                            <group class="oe_subtotal_footer">
+                                <field name="total_drls" widget="monetary" />
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+
+
+
+
+<!--        Imprest Application Search View-->
+        <record model="ir.ui.view" id="imprest_request_search">
+            <field name="name">imprest_request_search</field>
+            <field name="model">imprest.application</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <field name="applicant_id"/>
+                    <field name="purpose"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Applicant" name="payee" domain="" context="{'group_by':'applicant_id'}"/>
+                        <filter string="Date" name="date" domain="" context="{'group_by':'date'}"/>
+<!--                         <filter string="Activity" name="activity" domain="" context="{'group_by':'activity'}"/>
+                          <filter string="Project" name="project" domain="" context="{'group_by':'project'}"/>
+
+ -->                        <filter string="State" name="state" domain="" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+<!--        Imprest Application Home Menu Action-->
+        <record model="ir.actions.act_window" id="menu_imprest_application_action">
+            <field name="name">Advance Application</field>
+            <field name="res_model">imprest.application</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('created_by_id.user_id', '=', uid)]</field>
+        </record>
+
+
+        <!-- <record model="ir.actions.act_window" id="menu_fleet_approval_action">
+            <field name="name">Fleet Approvals</field>
+            <field name="res_model">imprest.fleet</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('created_by_id.user_id', '=', uid)]</field>
+        </record> -->
+
+        <!--        Extension Imprest Application Home Menu Action-->
+        <record id="menu_imprest_extension_action"  model="ir.actions.act_window">
+            <field name="name">Extension Advance Application</field>
+            <field name="res_model">extension.imprest.application</field>
+            <field name="context">{}</field>
+            <field name="view_mode">tree,form</field>
+<!--            <field name="domain">[('created_by_id.user_id', '=', uid)]</field>-->
+        </record>
+
+                <!--        Extension Imprest Application Home Menu Action-->
+
+    <!-- manager reason action for the button-->
+
+
+
+<!--        Awaiting Authorization Action-->
+    <record id="menu_imprest_awaiting_authorization_action" model="ir.actions.act_window">
+        <field name="name">For Authorizing</field>
+        <field name="res_model">imprest.application</field>
+        <field name="domain">[('state', '=', 'fleet_manager'),'|',('authorizer_id', '=', uid), ('group_authorize', '=', uid)]</field>
+        <field name="context">{}</field>
+        <field name="view_mode">tree,form</field>
+        <!-- , ('imprest_type', '=', 'group') -->
+    </record>
+
+<!--        Awaiting Certifying Action-->
+        <record model="ir.actions.act_window" id="menu_imprest_awaiting_certifying_action">
+            <field name="name">For Certifying</field>
+            <field name="res_model">imprest.application</field>
+            <field name="domain">[('state', '=', 'authorized'),('certifier_id', '=', uid)]</field>
+            <field name="context">{}</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+<!--        Awaiting Approval Action-->
+        <record model="ir.actions.act_window" id="menu_imprest_awaiting_approval_action">
+            <field name="name">For Approving</field>
+            <field name="res_model">imprest.application</field>
+           <field name="domain">[('state', '=', 'certified'),('approver_id', '=', uid)]</field>
+
+           <!-- <field name="domain">[ '|' , '|' , ('state', '=', 'certified') , ('state', '=', 'approved') , ('state', '=', 'verfy'), ('state', '=', 'account1') , ('state', '=', 'account2') , ('state', '=', 'finance_lead'), ('state', '=', 'finance_director'), ('state', '=', 'country_director') ]</field> -->
+
+
+            
+            <field name="context">{}</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+<!--        Awaiting PMs Verifications Action-->
+        <record model="ir.actions.act_window" id="menu_imprest_awaiting_pms_action">
+            <field name="name">For PM's Verification</field>
+            <field name="res_model">imprest.application</field>
+            <field name="domain">[('state', '=', 'approved'),('imprest_application_project_line_ids.project_manager', '=', uid)]</field>
+            <field name="context">{}</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+<!--        Awaiting Finance Verifications Action-->
+        <record model="ir.actions.act_window" id="menu_imprest_awaiting_verify_action">
+            <field name="name">For Verifications</field>
+            <field name="res_model">imprest.application</field>
+            <field name="domain">[('state', '=', 'assign_project_codes')]</field>
+            <field name="context">{}</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+<!--        Awaiting Accountant 1 and 2  Action-->
+        <record model="ir.actions.act_window" id="menu_imprest_awaiting_accountant1_action">
+            <field name="name">Accountant 1</field>
+            <field name="res_model">imprest.application</field>
+            <field name="domain">[('state', 'in', ('verify','account1'))]</field>
+            <field name="context">{}</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record model="ir.ui.view" id="drl_records_tree_view">
+            <field name="name">imprest_application_drl_views</field>
+            <field name="model">drl.journal</field>
+            <field name="arch" type="xml">
+                <tree string="Drl Journals">
+                    <field name="drl_rec"/>
+                    <field name="imprest"/>
+                    <field name="update_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="menu_imprest_drl_journal">
+            <field name="name">Drl Journal</field>
+            <field name="res_model">drl.journal</field>
+            <!-- <field name="domain">[('state', 'in', ('verify','account1'))]</field> -->
+            <field name="view_id" ref="drl_records_tree_view"/>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+
+        <record model="ir.actions.act_window" id="menu_fleet_application_athumani">
+            <field name="name">Fleet Applications</field>
+            <field name="res_model">imprest.fleet.application</field>
+            <!-- <field name="domain">[('state', 'in', ('verify','account1'))]</field> -->
+            <field name="context">{}</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <!--        Awaiting Accountant 1 and 2  Action-->
+        <record model="ir.actions.act_window" id="menu_imprest_awaiting_accountant2_action">
+            <field name="name">Accountant 2</field>
+            <field name="res_model">imprest.application</field>
+            <field name="domain">[('state', 'in', ('verify','account1','account2'))]</field>
+            <field name="context">{}</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+ 
+
+
+<!--        Accounts-->
+        <record model="ir.actions.act_window" id="menu_imprest_accounts_action">
+            
+            <field name="name">Financial Approvals </field>
+            <field name="res_model">imprest.application</field>
+            <field name="domain">[('state', 'in', ('account1','account2','finance_lead','finance_director','country_director'))]</field>
+            <field name="context">{}</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+     <!--        Imprest to be  post-->
+        <record model="ir.actions.act_window" id="menu_imprest_to_post_action">
+
+            <field name="name">Advances to Post </field>
+            <field name="res_model">imprest.application</field>
+           <!--  <field name="domain">[('state', 'in', ('account2','finance_lead','finance_director','country_director','posted','post'))]</field> -->
+           <field name="domain">[('state', '=', 'country_director')]</field>
+            <field name="context">{}</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <!--        Imprest to be  pay-->
+        <record model="ir.actions.act_window" id="menu_imprest_to_pay_action">
+            
+            <field name="name">Advances to Pay </field>
+            <field name="res_model">imprest.application</field>
+           <!--  <field name="domain">[('state', 'in', ('account2','finance_lead','finance_director','country_director','posted','post'))]</field> -->
+            <field name="domain">[('state', '=', 'post')]</field>
+            <field name="context">{}</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+
+                <!--        Imprest to be  pay-->
+        <record model="ir.actions.act_window" id="menu_imprest_to_retire_action">
+
+            <field name="name">Advances to Retire </field>
+            <field name="res_model">imprest.application</field>
+           <!--  <field name="domain">[('state', 'in', ('account2','finance_lead','finance_director','country_director','posted','post'))]</field> -->
+            <field name="domain">[('state', '=', 'posted')]</field>
+            <field name="context">{}</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="menu_imprest_to_complete_action">
+
+            <field name="name">Completed Adhoc / Claim </field>
+            <field name="res_model">imprest.application</field>
+           <!--  <field name="domain">[('state', 'in', ('account2','finance_lead','finance_director','country_director','posted','post'))]</field> -->
+            <field name="domain">[('state', '=', 'completed')]</field>
+            <field name="context">{}</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+         <!--  Fleet Actions-->
+    <record model="ir.actions.act_window" id="menu_imprest_awaiting_fleet_approval_action">
+            <field name="name">Fleet Request Actions </field>
+            <field name="res_model">imprest.application</field>
+            <field name="context">{}</field>
+            <field name="domain">[('state', '=', 'submitted')]</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+
+
+      <!--  All imprest lines-->
+
+        <record model="ir.actions.act_window" id="menu_imprest_lines_all_actions">
+            <field name="name">Group Approvals </field>
+            <field name="res_model">imprest.application</field>
+            <field name="domain">[('state', '=', 'fleet_manager'),('group_authorize', '=', uid)]</field>
+            <field name="context">{}</field>
+            <!-- <field name="view_id" ref="menu_imprest_lines_all_actions_tree_view"/> -->
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        
+
+
+      <!--  All imprest Actions-->
+        <record model="ir.actions.act_window" id="menu_imprest_all_actions">
+            <field name="name">Advance application / Imprest </field>
+            <field name="res_model">imprest.application</field>
+            <field name="context">{}</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+
+     <record model="ir.actions.act_window" id="menu_imprest_my_action">
+            
+            <field name="name">My Actions - All Aprovals and Reviews Done By Me</field>
+
+            <field name="res_model">imprest.application</field>
+            <field name="context">{}</field>
+
+            <field name="domain">["&amp;","|","&amp;",("state","not in",("submitted","draft")),("fleet_id","=",uid),("state","not in",("submitted","draft","fleet_manager")),
+                ("authorizer_id","=",uid)]</field>
+<!--         <field name="domain">["&amp;","|","&amp;","|","&amp;",("state","not in",("submitted","draft")),("fleet_id","=",uid),("state","not in",("submitted","draft","fleet_manager")),-->
+<!--                ("authorizer_id","=",uid),("state","not in",("submitted","draft","fleet_manager","authorized")),(uid,"in",'certifier_id.ids')]</field>-->
+<!--            <field name="domain">['|','|','|','|','|','|','|','|','|','|','|',('authorizer_by','=', uid),('certifier_by','=', uid),('approver_by','=', uid),('pm_approve_by','=', uid),('fo_verfy_by','=', uid),('account1_review_by','=', uid),('account2_approve_by','=', uid),('finance_lead_approved_by','=', uid),('finance_dr_approved_by','=', uid),('posted_by','=', uid),('paid_by','=', uid),('fleetmanager_authorise_by','=', uid)]</field>-->
+
+
+
+
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+<!--        Imprest Root Menu-->
+        <menuitem id="menu_imprest_root"
+                  name="Advance/Retirement"
+                  sequence="47"
+                  web_icon="hr_expense,static/description/icon.png"/>
+
+<!--        Imprest Application Home Menu-->
+        <menuitem id="menu_imprest_application"
+                  name="Advance Application"
+                  sequence="1"
+                  parent="menu_imprest_root"
+                  action="menu_imprest_application_action"/>
+
+
+
+<!--        Applications to Approve Parent Menu-->
+        <menuitem id="menu_application_to_approve"
+                  name="Awaiting Approval"
+                  sequence="2"
+                  parent="menu_imprest_application" groups="tenmet_imprest.group_imprest_approver"/>
+
+<!--        For Authorization-->
+
+        <menuitem id="menu_imprest_awaiting_authorization_participant"
+                  name="Confirm Participant"
+                  sequence="1"
+                  parent="menu_application_to_approve"
+                  action="menu_imprest_lines_all_actions"
+                  />
+        <menuitem id="menu_imprest_awaiting_authorization"
+                  name="For Authorization"
+                  sequence="2"
+                  parent="menu_application_to_approve"
+                  action="menu_imprest_awaiting_authorization_action"
+                  />
+
+        <menuitem id="menu_imprest_awaiting_authorization_athumani"
+                  name="DRL Journal"
+                  sequence="10"
+                  parent="menu_imprest_root"
+                  action="menu_imprest_drl_journal"
+                  />
+
+        <menuitem id="menu_fleet_authorization_athumani"
+                  name="Fleets"
+                  sequence="11"
+                  parent="menu_imprest_root"
+                  action="menu_fleet_application_athumani"
+                  groups="tenmet_imprest.group_imprest_fleet"/>
+
+                  
+
+        <menuitem id="menu_imprest_awaiting_certifying"
+                  name="For Certifying"
+                  sequence="2"
+                  parent="menu_application_to_approve"
+                  action="menu_imprest_awaiting_certifying_action"/>
+
+<!--        For Approving-->
+        <menuitem id="menu_imprest_awaiting_approval"
+                  name="For Approving"
+                  sequence="3"
+                  parent="menu_application_to_approve"
+                  action="menu_imprest_awaiting_approval_action"/>
+
+        <!--        Applications For Fleet Parent Menu-->
+        <menuitem id="menu_application_to_approve_fleet"
+                  name="Awaiting Fleet Approval"
+                  sequence="5"
+                  parent="menu_imprest_application" groups="tenmet_imprest.group_imprest_fleet"/>
+                  
+        <!--        For Fleet action-->
+        <!-- <menuitem id="menu_imprest_awaiting_fleet"
+                  name="For Fleet Approve"
+                  sequence="1"
+                  parent="menu_application_to_approve_fleet"
+                  action="menu_fleet_approval_action"/> -->
+
+
+
+    <!--        Applications for PM Verify Parent Menu-->
+        <menuitem id="menu_application_for_pm"
+                  name="PM's Verifications"
+                  sequence="6"
+                  parent="menu_imprest_application" groups="tenmet_imprest.group_imprest_project_lead"/>
+
+
+         <!--        PM Actions-->
+        <menuitem id="menu_imprest_pm_veryfyzz"
+                  name="To Assign DRL"
+                  sequence="7"
+                  parent="menu_application_for_pm"
+                  action="menu_imprest_awaiting_pms_action"/>
+
+
+    <!--        Applications for Fiance Approval Parent Menu-->
+        <menuitem id="menu_application_for_finance_approval"
+                  name="Finance Verifications "
+                  sequence="8"
+                  parent="menu_imprest_application" groups="tenmet_imprest.group_imprest_accountant"/>
+
+        <!--        Finance Officer Review-->
+
+        <menuitem id="menu_imprest_fo_review"
+                  name="Finance Officer To Review(F.O)"
+                  sequence="9"
+                  parent="menu_application_for_finance_approval"
+                  action="menu_imprest_awaiting_verify_action"/>
+
+        <menuitem id="menu_imprest_accountant1"
+                  name="Accountant 1 To Review (P.A 1)"
+                  sequence="10"
+                  parent="menu_application_for_finance_approval"
+                  action="menu_imprest_awaiting_accountant1_action"/>
+
+
+        <menuitem id="menu_imprest_accountant2"
+                  name="Accountant 2 To Approve (P.A 2)"
+                  sequence="11"
+                  parent="menu_application_for_finance_approval"
+                  action="menu_imprest_awaiting_accountant2_action"/>
+
+        <menuitem id="menu_imprest_project_lead_approve"
+                  name="Project Lead To Approve"
+                  sequence="12"
+                  parent="menu_application_for_finance_approval"
+                  action="menu_imprest_accounts_action"/>
+
+        <menuitem id="menu_imprest_finance_director_approve"
+                  name="Finance Director To Approve"
+                  sequence="13"
+                  parent="menu_application_for_finance_approval"
+                  action="menu_imprest_accounts_action"/>
+
+        <menuitem id="menu_imprest_contry_director_approve"
+                  name="Country Director To Approve"
+                  sequence="14"
+                  parent="menu_application_for_finance_approval"
+                  action="menu_imprest_accounts_action"/>
+
+
+        <!--        Applications for POST and PAY Parent Menu-->
+        <menuitem id="menu_application_for_post_pay_parent"
+                  name="Cashier Post and Pay"
+                  sequence="15"
+                  parent="menu_imprest_application" groups="tenmet_imprest.group_imprest_paypost"/>
+
+                <!--     POST and PAY action Menu-->
+     <menuitem id="menu_application_for_post"
+                  name="To Post"
+                  sequence="16"
+                  parent="menu_application_for_post_pay_parent"
+                  action="menu_imprest_to_post_action"/>
+
+        <menuitem id="menu_application_for_pay"
+                  name="To Pay"
+                  sequence="17"
+                  parent="menu_application_for_post_pay_parent"
+                  action="menu_imprest_to_pay_action"/>
+
+        <menuitem id="menu_application_for_retire"
+                  name="To Retire"
+                  sequence="18"
+                  parent="menu_application_for_post_pay_parent"
+                  action="menu_imprest_to_retire_action"/>
+
+        <menuitem id="menu_application_for_complete"
+                  name="Completed Claim/Adhoc"
+                  sequence="18"
+                  parent="menu_application_for_post_pay_parent"
+                  action="menu_imprest_to_complete_action"/>
+
+        <!--       All advances  Parent Menu-->
+        <menuitem id="menu_application_for_all_advances"
+                  name="All Advance / Imprest"
+                  sequence="19"
+                  parent="menu_imprest_application" groups="tenmet_imprest.group_imprest_project_director"/>
+
+                <!-- All advances / imprest  Menu-->
+        <menuitem id="menu_application_for_advances"
+                  name="All Advances"
+                  sequence="1"
+                  parent="menu_application_for_all_advances"
+                  action="menu_imprest_all_actions"/>
+
+
+        <!--MY APPROVALS PARENT MENU -->
+        <menuitem id="menu_my_approvals_parent"
+                  name="Approvals"
+                  sequence="3"
+                  parent="menu_imprest_root"
+                  groups="tenmet_imprest.group_imprest_accountant,tenmet_imprest.group_imprest_approver,group_imprest_paypost,group_imprest_project_lead,group_imprest_project_director"/>
+
+         <menuitem id="all_imprest"
+                  name="My Actions"
+                  sequence="4"
+                  parent="menu_my_approvals_parent" action="menu_imprest_my_action" />
+
+
+
+
+
+    </data>
+</odoo>

@@ -1,0 +1,39 @@
+<odoo>
+	<record id="view_reason_wizard" model="ir.ui.view">
+        <field name="name">reason.wizard.form</field>
+        <field name="model">reason.reason</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="reason" required="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Reject" name="reject" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+           </form>
+        </field>
+    </record>
+
+    <!-- reason two for line managers to reject applicant from imprest group-->
+	<record id="line_manager_reason_view" model="ir.ui.view">
+        <field name="name">reason.wizard.form.athumani</field>
+        <field name="model">manager.reason</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="reason" required="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Reject" name="submit_reason_ochu" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+           </form>
+        </field>
+    </record>
+
+</odoo>

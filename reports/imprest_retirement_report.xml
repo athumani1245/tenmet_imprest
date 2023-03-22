@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <report id="imprest_retirement_pdf_report"
+                model="imprest.retirement"
+                string="Imprest Retirement"
+                report_type="qweb-pdf"
+                name="tenmet_imprest.report_imprest_retirement"
+                file="tenmet_imprest.report_imprest_retirement"
+                print_report_name="'Imprest Retirement - %s' % (object.name)"
+                groups="tenmet_imprest.group_imprest_accountant"
+                menu="True"/>
+
+
+        <report id="retirement_xlsx_report"
+            model="imprest.retirement"
+            string="Retirement XLXS"
+            report_type="xlsx"
+            print_report_name="'Retirement Application - %s' % (object.name)"
+            name="tenmet_imprest.report_retirement_xls"
+            file="tenmet_imprest.report_retirement_xls"
+            menu="True"/>
+
+
+
+        <template id="report_imprest_retirement_document">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+
+                            <h3><strong><center>IMPREST RETIREMENT FORM</center></strong></h3>
+
+                            <br></br>
+
+                            <h5><strong>Imprest Retirement Number: </strong><span t-field="o.name"/></h5>
+
+                            <br></br>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Imprest Application : </strong> <span t-field="o.imprest_ref"/>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Amount Advanced: </strong> <span t-field="o.amount_advanced"
+                                                                            t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </div>
+                            </div>
+
+                            <br></br>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Applicant: </strong> <span t-field="o.retirement_applicant_id"/>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Amount Spent: </strong> <span t-field="o.total_amount_spent"
+                                                                            t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </div>
+                            </div>
+
+                            <br></br>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Date: </strong> <span t-field="o.date"/>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Balance: </strong> <span t-field="o.retirement_balance"
+                                                                              t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </div>
+                            </div>
+
+                            <br></br>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Activity: </strong> <span t-field="o.retirement_activity"/>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Comment: </strong> <span t-field="o.comment"/>
+                                </div>
+                            </div>
+
+                            <br></br>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Project: </strong> <span t-field="o.retirement_project"/>
+                                </div>
+                            </div>
+
+                            <br></br>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Purpose: </strong> <span t-field="o.retirement_purpose"/>
+                                </div>
+                            </div>
+
+                            <br></br>
+
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th><span>Item Description</span></th>
+                                        <th class="text-right"><span>Obligated Budget</span></th>
+<!--                                        <th><span>Date</span></th>-->
+                                        <th><span>Payee Name</span></th>
+                                        <th class="text-right"><span>Amount Spent</span></th>
+                                        <th class="text-right"><span>Balance</span></th>
+                                        <th><span>Doc. Ref #</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.imprest_retirement_line_ids" t-as="req">
+                                        <td><span t-field="req.name"/> </td>
+                                        <td class="text-right"><span t-field="req.obligated_budget" t-options='{"widget": "float", "precision": 2}'/> </td>
+<!--                                        <td><span t-field="req.date"/> </td>-->
+                                        <td><span t-field="req.payee_name"/> </td>
+                                        <td class="text-right"><span t-field="req.amount_spent" t-options='{"widget": "float", "precision": 2}'/> </td>
+                                        <td class="text-right"><span t-field="req.balance" t-options='{"widget": "float", "precision": 2}'/> </td>
+                                        <td><span t-field="req.doc_ref_number" /> </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+<!--                            <div id="total" class="row justify-content-end">-->
+<!--                                <div class="col-4">-->
+<!--                                    <table class="table table-sm">-->
+<!--                                        <tr class="border-black o_total">-->
+<!--                                            <td><strong>Grand Total</strong></td>-->
+<!--                                            <td class="text-right">-->
+<!--                                                <span t-field="o.grand_total"-->
+<!--                                                      t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+<!--                                    </table>-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+                            <br></br>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Retirement Authorized By: </strong> <span t-field="o.authorized_by"/>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Date Authorized: </strong> <span t-field="o.date_authorized"/>
+                                </div>
+                            </div>
+
+                            <br></br>
+
+<!--                            <div class="row">-->
+<!--                                <div class="col-6">-->
+<!--                                    <strong>Certified By: </strong> <span t-field="o.certified_by"/>-->
+<!--                                </div>-->
+<!--                                <div class="col-6">-->
+<!--                                    <strong>Date Certified: </strong> <span t-field="o.date_certified"/>-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+                            <br></br>
+
+                            <div class="row">
+<!--                                <div class="col-6">-->
+<!--                                    <strong>Approved By: </strong> <span t-field="o.approved_by"/>-->
+<!--                                </div>-->
+                                <div class="col-6">
+                                    <strong>Date Approved: </strong> <span t-field="o.date_approved"/>
+                                </div>
+                            </div>
+
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <template id="report_imprest_retirement">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="tenmet_imprest.report_imprest_retirement_document"/>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

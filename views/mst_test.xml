@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+  <data>
+
+
+      <record id="view_imprest_fleet_planes_form" model="ir.ui.view">
+        <field name="name">imprest.fleet.planes.form</field>
+        <field name="model">imprest.fleet.planes</field>
+        <field name="arch" type="xml">
+          <form string="Airline Section">
+            <!-- Add your fields here -->
+            <group>
+              <field name="name"/>
+              <field name="balance"/>
+            </group>
+            <notebook>
+              <page string="Fleets Involved">
+                <field name="fleet_line">
+                  <tree>
+                    <field name="applicant"/>
+                    <field name="fleet_from"/>
+                    <field name="fleet_to"/>
+                    <field name="fleet_cost"/>
+                  </tree>
+                </field>
+              </page>
+
+              <page string="Credited Transactions">
+                <field name="transact_in">
+                  <tree>
+                    <field name="name"/>
+                    <field name="amount"/>
+                    <field name="date"/>
+                  </tree>
+                </field>
+              </page>
+              
+            </notebook>
+          </form>
+        </field>
+      </record>
+
+      <record id="imprest_fleet_planes_tree_view" model="ir.ui.view">
+        <field name="name">imprest.fleet.planes.tree</field>
+        <field name="model">imprest.fleet.planes</field>
+        <field name="arch" type="xml">
+          <tree>
+            <field name="name"/>
+            <field name="balance"/>
+          </tree>
+        </field>
+      </record>
+      
+      <record id="menu_imprest_airline_action" model="ir.actions.act_window">
+        <field name="name">Airline Section</field>
+        <field name="res_model">imprest.fleet.planes</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="imprest_fleet_planes_tree_view"/>
+      </record>
+
+    
+
+
+
+
+      <menuitem id="menu_imprest_set_planes_codes"
+                  name="Airlines"
+                  sequence="3"
+                  parent="mst_imprest.menu_imprest_limit"
+                  action="menu_imprest_airline_action"
+                  />
+  </data>
+</odoo>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

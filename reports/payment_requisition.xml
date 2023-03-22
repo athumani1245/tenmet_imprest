@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <report id="payment_requisition_pdf_report"
+                model="payment.requisition"
+                string="Payment Requisition"
+                report_type="qweb-pdf"
+                name="tenmet_imprest.report_payment_requisition"
+                file="tenmet_imprest.report_payment_requisition"
+                print_report_name="'Payment Requisition - %s' % (object.name)"
+                 groups="tenmet_imprest.group_imprest_accountant"
+                menu="True"/>
+
+        <template id="report_payment_requisition_document">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+
+                            <h3><strong><center>PAYMENT REQUISITION FORM</center></strong></h3>
+
+                            <br></br>
+
+                            <strong>Payment Requisition Number: </strong><span t-field="o.name"/>
+
+                            <div class="row mt64">
+                                <div class="col-6" t-if="o.date">
+                                    <strong>Requisition Date: </strong> <span t-field="o.date"/>
+                                </div>
+                                <div class="col-6" t-if="o.project">
+                                    <strong>Project: </strong> <span t-field="o.project"/>
+                                </div>
+                            </div>
+
+                            <br/>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Payee: </strong> <span t-field="o.requestor"/>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Activity: </strong> <span t-field="o.activity"/>
+                                </div>
+                            </div>
+
+                            <br></br>
+
+                            <div class="row mb64">
+                                <div class="col-6">
+                                    <strong>Purpose: </strong> <span t-field="o.purpose"/>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Budget Balance: </strong><span t-field="o.budget_balance" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </div>
+                            </div>
+
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th><span>Item Description</span></th>
+                                        <th><span>Account</span></th>
+                                        <th><span>Unit</span></th>
+                                        <th><span>Quantity</span></th>
+                                        <th class="text-right"><span>Unit Price</span></th>
+                                        <th class="text-right"><span>Line Total</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.payment_requisition_lines" t-as="req">
+                                        <td><span t-field="req.name"/> </td>
+                                        <td><span t-field="req.account_id"/> </td>
+                                        <td><span t-field="req.product_uom_id"/> </td>
+                                        <td><span t-field="req.quantity"/> </td>
+                                        <td class="text-right"><span t-field="req.unit_price" t-options='{"widget": "float", "precision": 2}'/> </td>
+                                        <td class="text-right"><span t-field="req.line_total" t-options='{"widget": "float", "precision": 2}'/> </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div id="total" class="row justify-content-end">
+                                <div class="col-4">
+                                    <table class="table table-sm">
+                                        <tr class="border-black o_total">
+                                            <td><strong>Requisition Total</strong></td>
+                                            <td class="text-right">
+                                                <span t-field="o.requisition_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <br></br>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Requisition Created By: </strong> <span t-field="o.create_uid"/>
+                                </div>
+                                <div class="col-6" t-if="o.create_date">
+                                    <strong>Date Created: </strong> <span t-field="o.create_date"/>
+                                </div>
+                            </div>
+
+                            <br></br>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Activity Authorized By: </strong> <span t-field="o.authorized_by"/>
+                                </div>
+                                <div class="col-6" t-if="o.date_authorized">
+                                    <strong>Date Authorized: </strong> <span t-field="o.date_authorized"/>
+                                </div>
+                            </div>
+
+                            <br></br>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Certified By: </strong> <span t-field="o.certified_by"/>
+                                </div>
+                                <div class="col-6" t-if="o.date_certified">
+                                    <strong>Date Certified: </strong> <span t-field="o.date_certified"/>
+                                </div>
+                            </div>
+
+                            <br></br>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Approved By: </strong> <span t-field="o.approved_by"/>
+                                </div>
+                                <div class="col-6" t-if="o.date_approved">
+                                    <strong>Date Approved: </strong> <span t-field="o.date_approved"/>
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <template id="report_payment_requisition">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="tenmet_payment_requisition.report_payment_requisition_document"/>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

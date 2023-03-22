@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.module.category" id="module_imprest_category">
+            <field name="name">Advance / Imprest</field>
+            <field name="description">Make Imprest applications and Retirements</field>
+            <field name="sequence">6</field>
+        </record>
+
+        <record model="res.groups" id="group_imprest_approver">
+            <field name="name">Approver</field>
+            <field name="category_id" ref="module_imprest_category"/>
+        </record>
+
+        <record model="res.groups" id="group_imprest_accountant">
+             <field name="name">Financial Approvals</field>
+            <field name="category_id" ref="module_imprest_category"/>
+            <field name="implied_ids" eval="[(4, ref('tenmet_imprest.group_imprest_approver'))]"/>
+        </record>
+
+
+
+        <!--        Group Project Manager-->
+        <record model="res.groups" id="group_imprest_project_lead">
+            <field name="name">Project Manager / Project Lead</field>
+            <field name="category_id" ref="module_imprest_category"/>
+            <field name="implied_ids" eval="[(4, ref('tenmet_imprest.group_imprest_approver'))]"/>
+        </record>
+
+
+            <!--        Group Project Lead-->
+        <record model="res.groups" id="group_imprest_line_manager">
+            <field name="name">Line Managers</field>
+            <field name="category_id" ref="module_imprest_category"/>
+        </record>
+
+
+
+        <!--        Group Imprest cashier-->
+        <record model="res.groups" id="group_imprest_cashier">
+            <field name="name">Pay and Post</field>
+<!--   b4         <field name="name">Imprest Cashier</field>-->
+            <field name="category_id" ref="module_imprest_category"/>
+        </record>
+
+       <!--        Group Imprest cashier-->
+        <record model="res.groups" id="group_imprest_paypost">
+            <field name="name">Cashier</field>
+            <field name="category_id" ref="module_imprest_category"/>
+        </record>
+
+          <!--        Group Imprest Fleet Manager-->
+        <record model="res.groups" id="group_imprest_fleet">
+            <field name="name">Fleet Manager</field>
+            <field name="category_id" ref="module_imprest_category"/>
+        </record>
+
+
+         <record model="res.groups" id="group_imprest_lead">
+            <field name="name">F.  Lead</field>
+            <field name="category_id" ref="module_imprest_category"/>
+            <field name="implied_ids" eval="[(4, ref('tenmet_imprest.group_imprest_approver'))]"/>
+        </record>
+
+        <record model="res.groups" id="group_imprest_director">
+            <field name="name">P.  Director</field>
+            <field name="category_id" ref="module_imprest_category"/>
+            <field name="implied_ids" eval="[(4, ref('tenmet_imprest.group_imprest_approver'))]"/>
+        </record>
+
+
+         <record model="res.groups" id="group_imprest_project_accountant">
+            <field name="name">Project Accountants (1 AND 2)</field>
+            <field name="category_id" ref="module_imprest_category"/>
+
+        </record>
+
+
+
+
+                 <!--        Group Admin extends alll levels-->
+        <record model="res.groups" id="group_imprest_project_director">
+            <field name="name">Administrator</field>
+<!--     B4       <field name="name">Project Director</field>-->
+            <field name="category_id" ref="module_imprest_category"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('tenmet_imprest.group_imprest_approver')),
+                   (4, ref('tenmet_imprest.group_imprest_project_lead')),
+                   (4, ref('tenmet_imprest.group_imprest_accountant')),
+                   (4, ref('tenmet_imprest.group_imprest_cashier')),
+                   (4, ref('tenmet_imprest.group_imprest_fleet'))
+                   ]"/>
+        </record>
+        
+
+
+
+<!--        <record model="res.groups" id="group_imprest_administrator">-->
+<!--            <field name="name">Administrator</field>-->
+<!--            <field name="category_id" ref="module_imprest_category"/>-->
+<!--        </record>-->
+
+<!--        User sees Applications he has created-->
+        <record model="ir.rule" id="imprest_see_own_applications">
+            <field name="name">User sees Applications he has created </field>
+            <field name="model_id" ref="model_imprest_application"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        </record>
+
+<!--        User sees Retirements he has created-->
+        <record model="ir.rule" id="imprest_see_own_retirement">
+            <field name="name">User sees Retirements he has created</field>
+            <field name="model_id" ref="model_imprest_retirement"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <!-- <field name="domain_force">[('retirement_applicant', '=', 'loged_in')]</field> -->
+        </record>
+
+<!--        Approvers Sees All Applications-->
+        <record model="ir.rule" id="imprest_see_all_application_to_authorize">
+            <field name="name">Authorizer Sees all Applications</field>
+            <field name="model_id" ref="model_imprest_application"/>
+            <field name="groups" eval="[(4, ref('group_imprest_approver'))]"/>
+            <field name="domain_force">[(1, '=', 1), ('state', 'in', ('submitted','authorized')), ('authorizer_id','=', user.id)]</field>
+        </record>
+
+        <record model="ir.rule" id="imprest_see_all_application_to_certify">
+            <field name="name">Certifier Sees all Authorized Applications</field>
+            <field name="model_id" ref="model_imprest_application"/>
+            <field name="groups" eval="[(4, ref('group_imprest_approver'))]"/>
+            <field name="domain_force">[(1, '=', 1), ('state', 'in', ('authorized','certified')), ('certifier_id','=', user.id)]</field>
+        </record>
+
+        <record model="ir.rule" id="imprest_see_all_application_to_approve">
+            <field name="name">Approver Sees all Certified Applications</field>
+            <field name="model_id" ref="model_imprest_application"/>
+            <field name="groups" eval="[(4, ref('group_imprest_approver'))]"/>
+            <field name="domain_force">[(1, '=', 1), ('state', 'in', ('certified','approved')), ('approver_id','=', user.id)]</field>
+        </record>
+
+
+
+<!--  Approver  Sees All Acted imprest by him/her-->
+       
+     <!--    <record model="ir.rule" id="imprest_see_all_application_acted_imprest">
+            <field name="name">User see All imprest acted by him</field>
+            <field name="model_id" ref="model_imprest_application"/>
+            <field name="groups" eval="[(4, ref('group_imprest_approver'))]"/>
+            <field name="domain_force">[(1, '=', 1), ('state', 'in', ('submitted','authorized','accountant1','post','posted','accountant2','veryfy','retired','finance_lead','finance_director','assign_project_codes')), ('authorizer_id','=', user.id)]</field>
+        </record> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--        Approvers See All Retirements-->
+        <record model="ir.rule" id="imprest_see_all_retirements_to_authorize">
+            <field name="name">Authorizer Sees all Retirements</field>
+            <field name="model_id" ref="model_imprest_retirement"/>
+            <field name="groups" eval="[(4, ref('group_imprest_approver'))]"/>
+            <field name="domain_force">[(1, '=', 1), ('state', 'in', ('submitted','authorized')), ('authorizer_id','=', user.id)]</field>
+        </record>
+
+        <record model="ir.rule" id="imprest_see_all_retirements_to_certify">
+            <field name="name">Certifier Sees all Authorized Retirements</field>
+            <field name="model_id" ref="model_imprest_retirement"/>
+            <field name="groups" eval="[(4, ref('group_imprest_approver'))]"/>
+            <field name="domain_force">[(1, '=', 1), ('state', 'in', ('authorized','certified')), ('certifier_id','=', user.id)]</field>
+        </record>
+
+        <record model="ir.rule" id="imprest_see_all_retirements_to_approve">
+            <field name="name">Approver Sees all Certified Applications</field>
+            <field name="model_id" ref="model_imprest_retirement"/>
+            <field name="groups" eval="[(4, ref('group_imprest_approver'))]"/>
+            <field name="domain_force">[(1, '=', 1), ('state', 'in', ('certified','approved')), ('approver_id','=', user.id)]</field>
+        </record>
+
+<!--        Finance/Accounts Can view all approved and retired applications-->
+        <record model="ir.rule" id="imprest_accountant_see_all_approved_retired">
+            <field name="name">Accountant Sees all Approved and Retired Imprests</field>
+            <field name="model_id" ref="model_imprest_application"/>
+            <field name="groups" eval="[(4, ref('group_imprest_accountant'))]"/>
+            <field name="domain_force">[(1, '=', 1), ('state', 'in', ('approved','retired'))]</field>
+        </record>
+
+<!--        Finance/Accounts Can view all approved retirements-->
+        <record model="ir.rule" id="imprest_accountant_see_all_approved_retirements">
+            <field name="name">Accountant Sees all Approved Retirements</field>
+            <field name="model_id" ref="model_imprest_retirement"/>
+            <field name="groups" eval="[(4, ref('group_imprest_accountant'))]"/>
+            <field name="domain_force">[(1, '=', 1), ('state', '=', 'approved')]</field>
+        </record>
+
+<!--        ben addded this-->
+
+        <record model="ir.rule" id="imprest_admin_see_all_imprests">
+            <field name="name">Admin Sees all Imprests</field>
+            <field name="model_id" ref="model_imprest_application"/>
+            <field name="groups" eval="[(4, ref('base.group_no_one'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+         <record model="ir.rule" id="imprest_admin_see_all_imprests_ret">
+            <field name="name">Admin Sees all Imprests Retirement</field>
+            <field name="model_id" ref="model_imprest_retirement"/>
+            <field name="groups" eval="[(4, ref('base.group_no_one'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+
+
+    </data>
+</odoo>

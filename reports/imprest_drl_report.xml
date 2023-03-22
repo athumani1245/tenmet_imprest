@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <report id="drl_transactions_pdf_report" 
+            model="drl.journal" 
+            string="DRL Transactions PDF" 
+            report_type="qweb-pdf" 
+            name="tenmet_imprest.report_drl_transactions" 
+            file="tenmet_imprest.report_drl_transactions" 
+            print_report_name="Drl Transactions" 
+            groups="tenmet_imprest.group_imprest_accountant" 
+            menu="True" />
+
+        <report id="drls_xlsx_report"
+            model="drl.journal"
+            string="Drl Reports XLXS"
+            report_type="xlsx"
+            print_report_name="DRL Transactions"
+            name="tenmet_imprest.report_drl_xls"
+            file="tenmet_imprest.report_drl_xls"
+            menu="True"/>
+
+        
+
+
+        <template id="report_fleet_application_document">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h3>
+                                <strong>
+                                    <center>FLEET APPLICATION FORM</center>
+                                </strong>
+                            </h3>
+                            <br />
+                            <h5>
+                                <strong>Imprest Application Number:</strong>
+                                <span t-field="o.imprest_ref_id" />
+                            </h5>
+                            <br />
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Applicant:</strong>
+                                    <span t-field="o.fleet_applicant" />
+                                </div>
+                                <div class="col-6">
+                                    <strong>approver:</strong>
+                                    <span t-field="o.approver_id" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Date:</strong>
+                                    <span t-field="o.date" />
+                                </div>
+                                <div class="col-6">
+                                    <strong>Amount Requested:</strong>
+                                    <span t-field="o.fleet_total"/>
+                                </div>
+                            </div>
+                            <br />
+                            <t t-set="employee" t-value="[]"/>
+                            <t t-foreach="o.fleet_lines_ids" t-as="req">
+                                <t t-set="employee" t-value="employee+[req.applicant]"/>
+                            </t>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <span>Applicant</span>
+                                        </th>
+                                        <th>
+                                            <span>From</span>
+                                        </th>
+                                        <th>
+                                            <span>To</span>
+                                        </th>
+                                        <th>
+                                            <span>Plane</span>
+                                        </th>
+                                        <th>
+                                            <span>Date</span>
+                                        </th>
+                                        <th>
+                                            <span>Cost</span>
+                                        </th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="set(employee)" t-as="employee">
+                                        <tr t-foreach="o.fleet_lines_ids" t-as="req">
+                                            <t t-if="employee.id==req.applicant.id">
+                                                <td>
+                                                    <span t-field="req.applicant" />
+                                                </td>
+                                                <td>
+                                                    <span t-field="req.fleet_from" />
+                                                </td>
+                                                <td>
+                                                    <span t-field="req.fleet_to" />
+                                                </td>
+                                                <td>
+                                                    <span t-field="req.fleet_category" />
+                                                </td>
+                                                <td>
+                                                    <span t-field="req.dep_date" />
+                                                </td>
+                                                <td>
+                                                    <span t-field="req.fleet_cost" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}" />
+                                                </td>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <br />
+
+                            <div id="total" class="row justify-content-end">
+                                <div class="col-4">
+                                    <table class="table table-sm">
+                                        <tr class="border-black o_total">
+                                            <td>
+                                                <strong>Total Fleet Costs</strong>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-field="o.fleet_total" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <br />
+                            
+                            
+                            
+<!--                            <div class="row" style="margin-bottom:5px;">-->
+<!--                                <div class="col-6">-->
+<!--                                    <strong>Activity Authorized By:</strong>-->
+<!--                                    <span t-field="o.authorized_by" />-->
+<!--                                </div>-->
+<!--                                <div class="col-6">-->
+<!--                                    <strong>Date Authorized:</strong>-->
+<!--                                    <span t-field="o.date_authorized" />-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <br />-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-6">-->
+<!--                                    <strong>Certified By:</strong>-->
+<!--                                    <span t-field="o.certified_by" />-->
+<!--                                </div>-->
+<!--                                <div class="col-6">-->
+<!--                                    <strong>Date Certified:</strong>-->
+<!--                                    <span t-field="o.date_certified" />-->
+<!--                                </div>-->
+<!--                            </div>-->
+                            <br />
+                        </div> 
+                    </t>
+                </t>
+            </t>
+        </template>
+        <template id="report_fleet_application">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="tenmet_imprest.report_fleet_application_document" />
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

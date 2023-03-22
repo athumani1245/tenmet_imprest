@@ -1,0 +1,40 @@
+<odoo>
+    <record id="view_retirement_wizard" model="ir.ui.view">
+        <field name="name">reason.wizard.retirement.form</field>
+        <field name="model">reason.reason</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="reason" required="1"/>
+
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Reject" name="rejectRet" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-info" special="cancel"/>
+                </footer>
+           </form>
+        </field>
+    </record>
+
+    <!-- reason for rejection by line manager in imprest lines buttons-->
+    <!-- <record id="view_retirement_wizard" model="ir.ui.view">
+        <field name="name">reason.wizard.retirement.form</field>
+        <field name="model">reason.reason</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="reason" required="1"/>
+
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Reject" name="rejectRet" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-info" special="cancel"/>
+                </footer>
+           </form>
+        </field>
+    </record> -->
+</odoo>

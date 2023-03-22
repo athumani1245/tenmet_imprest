@@ -1,0 +1,1466 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--Email template -->
+        <record id="email_template_mst_imprest" model="mail.template">
+            <field name="name">Advance Imprest to authorise</field>
+            <field name="model_id" ref="tenmet_imprest.model_imprest_application" />
+            <field name="email_from">${(object.applicant_id.email_formatted or user.email_formatted) |safe}</field>
+            <field name="email_to">${object.authorizer_id.login}</field>
+            <field name="subject">${object.name} Advance / Imprest to Authorise (Ref ${object.name or 'n/a'})</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                                <tbody>
+                                    <!-- HEADER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle">
+                                                        <span style="font-size: 10px;">Advance / Imprest Application</span>
+                                                        <br />
+                                                        <span style="font-size: 20px; font-weight: bold;">From ${object.applicant_id.name}</span>
+                                                    </td>
+                                                    <td valign="middle" align="right">
+                                                        <img src="/logo.png?company=${object.applicant_id.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.applicant_id.company_id.name}" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- CONTENT -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="top" style="font-size: 13px;">
+                                                        <div>
+                                                            Dear ${object.authorizer_id.name},
+                                                            <br />
+                                                            <br />
+                                                            I am request you to approve my Advance aplication with Reference number
+                                                            <strong>${object.name}</strong>
+                                                            of total amount
+                                                            <strong>${format_amount(object.grand_total, object.currency_id)}</strong>
+                                                            for the Purpose of
+                                                            <strong>${object.purpose}.</strong>
+                                                            <br />
+                                                            Kindly Click below link to
+                                                            <strong>Approve or Reject</strong>
+                                                            Link will be valid during 24 hours
+                                                            <br />
+                                                            <div style="margin: 16px 0px 16px 0px;">
+                                                                <a href=" ${object.url}" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">Approve / Reject</a>
+                                                            </div>
+                                                            If you do not expect this, you can safely ignore this email.
+                                                            <br />
+                                                            <br />
+                                                            Thanks,
+                                                            <br />
+                                                            ${user.signature | safe}
+                                                            <br />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- FOOTER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle" align="left">${object.applicant_id.company_id.name}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="middle" align="left" style="opacity: 0.7;">
+                                                        ${object.applicant_id.company_id.phone}
+                    % if object.applicant_id.company_id.email
+                        |
+                                                        <a href="'mailto:%s' % ${object.applicant_id.company_id.email}" style="text-decoration:none; color: #454748;">${object.applicant_id.company_id.email}</a>
+                                                        % endif
+                    % if object.applicant_id.company_id.website
+                        |
+                                                        <a href="'%s' % ${object.applicant_id.company_id.website}" style="text-decoration:none; color: #454748;">${object.applicant_id.company_id.website}</a>
+                                                        % endif
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- POWERED BY -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+                                <tr>
+                                    <td style="text-align: center; font-size: 13px;">
+                                        Powered by
+                                        <a target="_blank" href="https://www.mst.or.tz?utm_source=db&amp;utm_medium=auth" style="color: #875A7B;">Marie Stopes Tanzania</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+        </record>
+
+
+
+
+
+
+
+
+<record id="email_template_mst_imprest_fleet" model="mail.template">
+            <field name="name">Advance Imprest to Approve</field>
+            <field name="model_id" ref="tenmet_imprest.model_imprest_application" />
+            <field name="email_from">${(object.applicant_id.email_formatted or user.email_formatted) |safe}</field>
+            <field name="email_to">${object.fleet_id.login}</field>
+            <field name="subject">${object.name} Advance / Imprest to Authorise (Ref ${object.name or 'n/a'})</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                                <tbody>
+                                    <!-- HEADER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle">
+                                                        <span style="font-size: 10px;">Advance / Imprest Application</span>
+                                                        <br />
+                                                        <span style="font-size: 20px; font-weight: bold;">From ${object.applicant_id.name}</span>
+                                                    </td>
+                                                    <td valign="middle" align="right">
+                                                        <img src="/logo.png?company=${object.applicant_id.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.applicant_id.company_id.name}" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- CONTENT -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="top" style="font-size: 13px;">
+                                                        <div>
+                                                            Dear ${object.fleet_id.name},
+                                                            <br />
+                                                            <br />
+                                                            I am request you to approve my Advance aplication with Reference number
+                                                            <strong>${object.name}</strong>
+                                                            of total amount
+                                                            <strong>${format_amount(object.grand_total, object.currency_id)}</strong>
+                                                            for the Purpose of
+                                                            <strong>${object.purpose}.</strong>
+                                                            <br />
+                                                            Kindly Click below link to
+                                                            <strong>Approve or Reject</strong>
+                                                            Link will be valid during 24 hours
+                                                            <br />
+                                                            <div style="margin: 16px 0px 16px 0px;">
+                                                                <a href=" ${object.url}" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">Approve / Reject</a>
+                                                            </div>
+                                                            If you do not expect this, you can safely ignore this email.
+                                                            <br />
+                                                            <br />
+                                                            Thanks,
+                                                            <br />
+                                                            ${user.signature | safe}
+                                                            <br />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- FOOTER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle" align="left">${object.applicant_id.company_id.name}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="middle" align="left" style="opacity: 0.7;">
+                                                        ${object.applicant_id.company_id.phone}
+                    % if object.applicant_id.company_id.email
+                        |
+                                                        <a href="'mailto:%s' % ${object.applicant_id.company_id.email}" style="text-decoration:none; color: #454748;">${object.applicant_id.company_id.email}</a>
+                                                        % endif
+                    % if object.applicant_id.company_id.website
+                        |
+                                                        <a href="'%s' % ${object.applicant_id.company_id.website}" style="text-decoration:none; color: #454748;">${object.applicant_id.company_id.website}</a>
+                                                        % endif
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- POWERED BY -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+                                <tr>
+                                    <td style="text-align: center; font-size: 13px;">
+                                        Powered by
+                                        <a target="_blank" href="https://www.mst.or.tz?utm_source=db&amp;utm_medium=auth" style="color: #875A7B;">Marie Stopes Tanzania</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+        </record>
+
+
+
+
+        <record id="email_template_mst_imprest_authorized" model="mail.template">
+            <field name="name">Advance: Request Project Lead Certification</field>
+            <field name="model_id" ref="tenmet_imprest.model_imprest_application" />
+            <field name="email_from">${(object.applicant_id.email_formatted or user.email_formatted) |safe}</field>
+            
+            <field name="subject">${object.name} Advance / Imprest to Approve (Ref ${object.name or 'n/a'})</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                                <tbody>
+                                    <!-- HEADER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle">
+                                                        <span style="font-size: 10px;">Advance / Imprest Application</span>
+                                                        <br />
+                                                        <span style="font-size: 20px; font-weight: bold;">From ${object.applicant_id.name}</span>
+                                                    </td>
+                                                    <td valign="middle" align="right">
+                                                        <img src="/logo.png?company=${object.applicant_id.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.applicant_id.company_id.name}" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- CONTENT -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="top" style="font-size: 13px;">
+                                                        <div>
+                                                            Dear ${object.certifier_id.name},
+                                                            <br />
+                                                            <br />
+                                                            I am request you to approve my Advance aplication with Reference number
+                                                            <strong>${object.name}</strong>
+                                                            of total amount
+                                                            <strong>${format_amount(object.grand_total, object.currency_id)}</strong>
+                                                            for the Purpose of
+                                                            <strong>${object.purpose}.</strong>
+                                                            <br />
+                                                            <br />
+                                                            <strong>Remember to assign Projects Cost distribution before Approving.</strong>
+                                                            <br />
+                                                            Kindly Click below link to
+                                                            <strong>Approve or Reject</strong>
+                                                            Link will be valid during 24 hours
+                                                            <br />
+                                                            <div style="margin: 16px 0px 16px 0px;">
+                                                                <a href=" ${object.url}" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">Approve / Reject</a>
+                                                            </div>
+                                                            If you do not expect this, you can safely ignore this email.
+                                                            <br />
+                                                            <br />
+                                                            Thanks,
+                                                            <br />
+                                                            ${user.signature | safe}
+                                                            <br />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- FOOTER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle" align="left">${object.applicant_id.company_id.name}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="middle" align="left" style="opacity: 0.7;">
+                                                        ${object.applicant_id.company_id.phone}
+                    % if object.applicant_id.company_id.email
+                        |
+                                                        <a href="'mailto:%s' % ${object.applicant_id.company_id.email}" style="text-decoration:none; color: #454748;">${object.applicant_id.company_id.email}</a>
+                                                        % endif
+                    % if object.applicant_id.company_id.website
+                        |
+                                                        <a href="'%s' % ${object.applicant_id.company_id.website}" style="text-decoration:none; color: #454748;">${object.applicant_id.company_id.website}</a>
+                                                        % endif
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- POWERED BY -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+                                <tr>
+                                    <td style="text-align: center; font-size: 13px;">
+                                        Powered by
+                                        <a target="_blank" href="https://www.mst.or.tz?utm_source=db&amp;utm_medium=auth" style="color: #875A7B;">Marie Stopes Tanzania</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+        </record>
+        <record id="email_template_mst_imprest_approve" model="mail.template">
+            <field name="name">Advance: Request to Approve Advance</field>
+            <field name="model_id" ref="tenmet_imprest.model_imprest_application" />
+            <field name="email_from">${(object.applicant_id.email_formatted or user.email_formatted) |safe}</field>
+            <field name="email_to">${object.approver_id.login}</field>
+            <field name="subject">${object.name} Advance / Imprest to Approve (Ref ${object.name or 'n/a'})</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                                <tbody>
+                                    <!-- HEADER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle">
+                                                        <span style="font-size: 10px;">Advance / Imprest Application</span>
+                                                        <br />
+                                                        <span style="font-size: 20px; font-weight: bold;">From ${object.applicant_id.name}</span>
+                                                    </td>
+                                                    <td valign="middle" align="right">
+                                                        <img src="/logo.png?company=${object.applicant_id.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.applicant_id.company_id.name}" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- CONTENT -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="top" style="font-size: 13px;">
+                                                        <div>
+                                                            Dear ${object.approver_id.name},
+                                                            <br />
+                                                            <br />
+                                                            I am request you to approve my Advance aplication with Reference number
+                                                            <strong>${object.name}</strong>
+                                                            of total amount
+                                                            <strong>${format_amount(object.grand_total, object.currency_id)}</strong>
+                                                            for the Purpose of
+                                                            <strong>${object.purpose}.</strong>
+                                                            <br />
+                                                            <br />
+                                                            Kindly Click below link to
+                                                            <strong>Approve or Reject</strong>
+                                                            Link will be valid during 24 hours
+                                                            <br />
+                                                            <div style="margin: 16px 0px 16px 0px;">
+                                                                <a href=" ${object.url}" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">Approve / Reject</a>
+                                                            </div>
+                                                            If you do not expect this, you can safely ignore this email.
+                                                            <br />
+                                                            <br />
+                                                            Thanks,
+                                                            <br />
+                                                            ${user.signature | safe}
+                                                            <br />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- FOOTER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle" align="left">${object.applicant_id.company_id.name}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="middle" align="left" style="opacity: 0.7;">
+                                                        ${object.applicant_id.company_id.phone}
+                    % if object.applicant_id.company_id.email
+                        |
+                                                        <a href="'mailto:%s' % ${object.applicant_id.company_id.email}" style="text-decoration:none; color: #454748;">${object.applicant_id.company_id.email}</a>
+                                                        % endif
+                    % if object.applicant_id.company_id.website
+                        |
+                                                        <a href="'%s' % ${object.applicant_id.company_id.website}" style="text-decoration:none; color: #454748;">${object.applicant_id.company_id.website}</a>
+                                                        % endif
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- POWERED BY -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+                                <tr>
+                                    <td style="text-align: center; font-size: 13px;">
+                                        Powered by
+                                        <a target="_blank" href="https://www.mst.or.tz?utm_source=db&amp;utm_medium=auth" style="color: #875A7B;">Marie Stopes Tanzania</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+        </record>
+        <record id="email_template_mst_imprest_pm" model="mail.template">
+            <field name="name">Advance: Request Project Manager to Approve</field>
+            <field name="model_id" ref="tenmet_imprest.model_imprest_application" />
+            <field name="email_from">${(object.applicant_id.email_formatted or user.email_formatted) |safe}</field>
+            <field name="email_to">${object.pm_approver_id.login}</field>
+            <field name="subject">${object.name} Advance / Imprest to Approve (Ref ${object.name or 'n/a'})</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                                <tbody>
+                                    <!-- HEADER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle">
+                                                        <span style="font-size: 10px;">Advance / Imprest Application</span>
+                                                        <br />
+                                                        <span style="font-size: 20px; font-weight: bold;">From ${object.applicant_id.name}</span>
+                                                    </td>
+                                                    <td valign="middle" align="right">
+                                                        <img src="/logo.png?company=${object.applicant_id.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.applicant_id.company_id.name}" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- CONTENT -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="top" style="font-size: 13px;">
+                                                        <div>
+                                                            Dear ${object.pm_approver_id.name},
+                                                            <br />
+                                                            <br />
+                                                            I am request you to approve my Advance aplication with Reference number
+                                                            <strong>${object.name}</strong>
+                                                            of total amount
+                                                            <strong>${format_amount(object.grand_total, object.currency_id)}</strong>
+                                                            for the Purpose of
+                                                            <strong>${object.purpose}.</strong>
+                                                            <br />
+                                                            <br />
+                                                            <strong>Remember to assign Projects DRL  before Approving.</strong>
+                                                            <br />
+                                                            Kindly Click below link to
+                                                            <strong>Approve or Reject</strong>
+                                                            Link will be valid during 24 hours
+                                                            <br />
+                                                            <div style="margin: 16px 0px 16px 0px;">
+                                                                <a href=" ${object.url}" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">Approve / Reject</a>
+                                                            </div>
+                                                            If you do not expect this, you can safely ignore this email.
+                                                            <br />
+                                                            <br />
+                                                            Thanks,
+                                                            <br />
+                                                            ${user.signature | safe}
+                                                            <br />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- FOOTER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle" align="left">${object.applicant_id.company_id.name}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="middle" align="left" style="opacity: 0.7;">
+                                                        ${object.applicant_id.company_id.phone}
+                    % if object.applicant_id.company_id.email
+                        |
+                                                        <a href="'mailto:%s' % ${object.applicant_id.company_id.email}" style="text-decoration:none; color: #454748;">${object.applicant_id.company_id.email}</a>
+                                                        % endif
+                    % if object.applicant_id.company_id.website
+                        |
+                                                        <a href="'%s' % ${object.applicant_id.company_id.website}" style="text-decoration:none; color: #454748;">${object.applicant_id.company_id.website}</a>
+                                                        % endif
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- POWERED BY -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+                                <tr>
+                                    <td style="text-align: center; font-size: 13px;">
+                                        Powered by
+                                        <a target="_blank" href="https://www.mst.or.tz?utm_source=db&amp;utm_medium=auth" style="color: #875A7B;">Marie Stopes Tanzania</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+        </record>
+        <record id="email_template_mst_imprest_finance_officer" model="mail.template">
+            <field name="name">Advance: Request Finance Officer Review</field>
+            <field name="model_id" ref="tenmet_imprest.model_imprest_application" />
+            <field name="email_from">${(object.applicant_id.email_formatted or user.email_formatted) |safe}</field>
+            <field name="email_to">${object.verify_id.login}</field>
+            <field name="subject">${object.name} Advance / Imprest to Approve (Ref ${object.name or 'n/a'})</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                                <tbody>
+                                    <!-- HEADER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle">
+                                                        <span style="font-size: 10px;">Advance / Imprest Application</span>
+                                                        <br />
+                                                        <span style="font-size: 20px; font-weight: bold;">From ${object.applicant_id.name}</span>
+                                                    </td>
+                                                    <td valign="middle" align="right">
+                                                        <img src="/logo.png?company=${object.applicant_id.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.applicant_id.company_id.name}" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- CONTENT -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="top" style="font-size: 13px;">
+                                                        <div>
+                                                            Dear ${object.verify_id.name},
+                                                            <br />
+                                                            <br />
+                                                            I am request you to approve my Advance aplication with Reference number
+                                                            <strong>${object.name}</strong>
+                                                            of total amount
+                                                            <strong>${format_amount(object.grand_total, object.currency_id)}</strong>
+                                                            for the Purpose of
+                                                            <strong>${object.purpose}.</strong>
+                                                            <br />
+                                                            <br />
+                                                            <strong>Remember to assign Projects Accountants Approving.</strong>
+                                                            <br />
+                                                            Kindly Click below link to
+                                                            <strong>Approve or Reject</strong>
+                                                            Link will be valid during 24 hours
+                                                            <br />
+                                                            <div style="margin: 16px 0px 16px 0px;">
+                                                                <a href=" ${object.url}" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">Approve / Reject</a>
+                                                            </div>
+                                                            If you do not expect this, you can safely ignore this email.
+                                                            <br />
+                                                            <br />
+                                                            Thanks,
+                                                            <br />
+                                                            ${user.signature | safe}
+                                                            <br />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- FOOTER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle" align="left">${object.applicant_id.company_id.name}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="middle" align="left" style="opacity: 0.7;">
+                                                        ${object.applicant_id.company_id.phone}
+                    % if object.applicant_id.company_id.email
+                        |
+                                                        <a href="'mailto:%s' % ${object.applicant_id.company_id.email}" style="text-decoration:none; color: #454748;">${object.applicant_id.company_id.email}</a>
+                                                        % endif
+                    % if object.applicant_id.company_id.website
+                        |
+                                                        <a href="'%s' % ${object.applicant_id.company_id.website}" style="text-decoration:none; color: #454748;">${object.applicant_id.company_id.website}</a>
+                                                        % endif
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- POWERED BY -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+                                <tr>
+                                    <td style="text-align: center; font-size: 13px;">
+                                        Powered by
+                                        <a target="_blank" href="https://www.mst.or.tz?utm_source=db&amp;utm_medium=auth" style="color: #875A7B;">Marie Stopes Tanzania</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+        </record>
+
+
+
+
+<record id="email_template_mst_imprest_finance_lead" model="mail.template">
+            <field name="name">Advance: Request Finance Lead Approval</field>
+            <field name="model_id" ref="tenmet_imprest.model_imprest_application" />
+            <field name="email_from">${(object.applicant_id.email_formatted or user.email_formatted) |safe}</field>
+            <field name="email_to">${object.finance_lead_id.login}</field>
+            <field name="subject">${object.name} Advance / Imprest to Approve (Ref ${object.name or 'n/a'})</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                                <tbody>
+                                    <!-- HEADER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle">
+                                                        <span style="font-size: 10px;">Advance / Imprest Application</span>
+                                                        <br />
+                                                        <span style="font-size: 20px; font-weight: bold;">From ${object.applicant_id.name}</span>
+                                                    </td>
+                                                    <td valign="middle" align="right">
+                                                        <img src="/logo.png?company=${object.applicant_id.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.applicant_id.company_id.name}" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- CONTENT -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="top" style="font-size: 13px;">
+                                                        <div>
+                                                            Dear ${object.finance_lead_id.name},
+                                                            <br />
+                                                            <br />
+                                                            I am request you to approve my Advance aplication with Reference number
+                                                            <strong>${object.name}</strong>
+                                                            of total amount
+                                                            <strong>${format_amount(object.grand_total, object.currency_id)}</strong>
+                                                            for the Purpose of
+                                                            <strong>${object.purpose}.</strong>
+                                                            <br />
+                                                            <br />
+                                                            <strong>.</strong>
+                                                            <br />
+                                                            Kindly Click below link to
+                                                            <strong>Approve or Reject</strong>
+                                                            Link will be valid during 24 hours
+                                                            <br />
+                                                            <div style="margin: 16px 0px 16px 0px;">
+                                                                <a href=" ${object.url}" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">Approve / Reject</a>
+                                                            </div>
+                                                            If you do not expect this, you can safely ignore this email.
+                                                            <br />
+                                                            <br />
+                                                            Thanks,
+                                                            <br />
+                                                            ${user.signature | safe}
+                                                            <br />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- FOOTER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle" align="left">${object.applicant_id.company_id.name}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="middle" align="left" style="opacity: 0.7;">
+                                                        ${object.applicant_id.company_id.phone}
+                    % if object.applicant_id.company_id.email
+                        |
+                                                        <a href="'mailto:%s' % ${object.applicant_id.company_id.email}" style="text-decoration:none; color: #454748;">${object.applicant_id.company_id.email}</a>
+                                                        % endif
+                    % if object.applicant_id.company_id.website
+                        |
+                                                        <a href="'%s' % ${object.applicant_id.company_id.website}" style="text-decoration:none; color: #454748;">${object.applicant_id.company_id.website}</a>
+                                                        % endif
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- POWERED BY -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+                                <tr>
+                                    <td style="text-align: center; font-size: 13px;">
+                                        Powered by
+                                        <a target="_blank" href="https://www.mst.or.tz?utm_source=db&amp;utm_medium=auth" style="color: #875A7B;">Marie Stopes Tanzania</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+        </record>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- our new template -->
+
+
+
+
+
+
+        <record id="email_template_mst_imprest_global2" model="mail.template">
+            <field name="name">Request Advance Certify</field>
+            <field name="model_id" ref="tenmet_imprest.model_imprest_application" />
+            <field name="subject">${object.name} Advance / Imprest to Approve (Ref ${object.name or 'n/a'})</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                                <tbody>
+                                    <!-- HEADER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle">
+                                                        <span style="font-size: 10px;">Advance / Imprest Application</span>
+                                                        <br />
+                                                        <span style="font-size: 20px; font-weight: bold;">From ${object.applicant_id.name}</span>
+                                                    </td>
+                                                    <td valign="middle" align="right">
+                                                        <img src="/logo.png?company=${object.applicant_id.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.applicant_id.company_id.name}" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- CONTENT -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="top" style="font-size: 13px;">
+                                                        <div>
+                                                            Dear ${object.name_email},
+                                                            <br />
+                                                            <br />
+                                                            I am request you to approve my Advance aplication with Reference number
+                                                            <strong>${object.name}</strong>
+                                                            of total amount
+                                                            <strong>${format_amount(object.grand_total, object.currency_id)}</strong>
+                                                            for the Purpose of
+                                                            <strong>${object.purpose}.</strong>
+                                                            <br />
+                                                            <br />
+                                                            <br />
+                                                            Kindly Click below link to
+                                                            <strong>Approve or Reject</strong>
+                                                            Link will be valid during 24 hours
+                                                            <br />
+                                                            <div style="margin: 16px 0px 16px 0px;">
+                                                                <a href=" ${object.url}" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">Approve / Reject</a>
+                                                            </div>
+                                                            If you do not expect this, you can safely ignore this email.
+                                                            <br />
+                                                            <br />
+                                                            Thanks,
+                                                            <br />
+                                                            ${user.signature | safe}
+                                                            <br />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- FOOTER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle" align="left">${object.applicant_id.company_id.name}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="middle" align="left" style="opacity: 0.7;">
+                                                        ${object.applicant_id.company_id.phone}
+                    % if object.applicant_id.company_id.email
+                        |
+                                                        <a href="'mailto:%s' % ${object.applicant_id.company_id.email}" style="text-decoration:none; color: #454748;">${object.applicant_id.company_id.email}</a>
+                                                        % endif
+                    % if object.applicant_id.company_id.website
+                        |
+                                                        <a href="'%s' % ${object.applicant_id.company_id.website}" style="text-decoration:none; color: #454748;">${object.applicant_id.company_id.website}</a>
+                                                        % endif
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- POWERED BY -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+                                <tr>
+                                    <td style="text-align: center; font-size: 13px;">
+                                        Powered by
+                                        <a target="_blank" href="https://www.mst.or.tz?utm_source=db&amp;utm_medium=auth" style="color: #875A7B;">Marie Stopes Tanzania</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+        </record>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <record id="email_template_mst_imprest_global" model="mail.template">
+            <field name="name">Request Advance Approve</field>
+            <field name="model_id" ref="tenmet_imprest.model_imprest_application" />
+            <field name="subject">${object.name} Advance / Imprest to Approve (Ref ${object.name or 'n/a'})</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                                <tbody>
+                                    <!-- HEADER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle">
+                                                        <span style="font-size: 10px;">Advance / Imprest Application</span>
+                                                        <br />
+                                                        <span style="font-size: 20px; font-weight: bold;">From ${object.applicant_id.name}</span>
+                                                    </td>
+                                                    <td valign="middle" align="right">
+                                                        <img src="/logo.png?company=${object.applicant_id.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.applicant_id.company_id.name}" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- CONTENT -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="top" style="font-size: 13px;">
+                                                        <div>
+                                                            Dear ,
+                                                            <br />
+                                                            <br />
+                                                            I am request you to approve my Advance aplication with Reference number
+                                                            <strong>${object.name}</strong>
+                                                            of total amount
+                                                            <strong>${format_amount(object.grand_total, object.currency_id)}</strong>
+                                                            for the Purpose of
+                                                            <strong>${object.purpose}.</strong>
+                                                            <br />
+                                                            <br />
+                                                            <br />
+                                                            Kindly Click below link to
+                                                            <strong>Approve or Reject</strong>
+                                                            Link will be valid during 24 hours
+                                                            <br />
+                                                            <div style="margin: 16px 0px 16px 0px;">
+                                                                <a href=" ${object.url}" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">Approve / Reject</a>
+                                                            </div>
+                                                            If you do not expect this, you can safely ignore this email.
+                                                            <br />
+                                                            <br />
+                                                            Thanks,
+                                                            <br />
+                                                            ${user.signature | safe}
+                                                            <br />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- FOOTER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle" align="left">${object.applicant_id.company_id.name}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="middle" align="left" style="opacity: 0.7;">
+                                                        ${object.applicant_id.company_id.phone}
+                    % if object.applicant_id.company_id.email
+                        |
+                                                        <a href="'mailto:%s' % ${object.applicant_id.company_id.email}" style="text-decoration:none; color: #454748;">${object.applicant_id.company_id.email}</a>
+                                                        % endif
+                    % if object.applicant_id.company_id.website
+                        |
+                                                        <a href="'%s' % ${object.applicant_id.company_id.website}" style="text-decoration:none; color: #454748;">${object.applicant_id.company_id.website}</a>
+                                                        % endif
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- POWERED BY -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+                                <tr>
+                                    <td style="text-align: center; font-size: 13px;">
+                                        Powered by
+                                        <a target="_blank" href="https://www.mst.or.tz?utm_source=db&amp;utm_medium=auth" style="color: #875A7B;">Marie Stopes Tanzania</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+        </record>
+
+        <record id="email_template_mst_reject" model="mail.template">
+            <field name="name">Reject Imprest</field>
+            <field name="model_id" ref="tenmet_imprest.model_imprest_application" />
+            <field name="subject">${object.name} Appication Reject</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                                <tbody>
+                                    <!-- HEADER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle">
+                                                        <span style="font-size: 10px;">Advance / Imprest Application</span>
+                                                        <br />
+                                                        <span style="font-size: 20px; font-weight: bold;">From ${object.applicant_id.name}</span>
+                                                    </td>
+                                                    <td valign="middle" align="right">
+                                                        <img src="/logo.png?company=${object.applicant_id.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.applicant_id.company_id.name}" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- CONTENT -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="top" style="font-size: 13px;">
+                                                        <div>
+                                                            Dear ${object.applicant_id.name},
+                                                            <br />
+                                                            <br />
+                                                            Your applicaion is reject.
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- FOOTER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle" align="left">${object.applicant_id.company_id.name}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="middle" align="left" style="opacity: 0.7;">
+                                                        ${object.applicant_id.company_id.phone}
+                    % if object.applicant_id.company_id.email
+                        |
+                                                        <a href="'mailto:%s' % ${object.applicant_id.company_id.email}" style="text-decoration:none; color: #454748;">${object.applicant_id.company_id.email}</a>
+                                                        % endif
+                    % if object.applicant_id.company_id.website
+                        |
+                                                        <a href="'%s' % ${object.applicant_id.company_id.website}" style="text-decoration:none; color: #454748;">${object.applicant_id.company_id.website}</a>
+                                                        % endif
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- POWERED BY -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+                                <tr>
+                                    <td style="text-align: center; font-size: 13px;">
+                                        Powered by
+                                        <a target="_blank" href="https://www.mst.or.tz?utm_source=db&amp;utm_medium=auth" style="color: #875A7B;">Marie Stopes Tanzania</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+        </record>
+
+
+
+
+        <!-- rejection of group member template-->
+        <record id="email_template_mst_reject_athumani" model="mail.template">
+            <field name="name">Reject Imprest Member</field>
+            <field name="model_id" ref="tenmet_imprest.model_manager_reason" />
+            <field name="subject">${object.applicant_line_id} Appication Member Reject</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                                <tbody>
+                                    <!-- HEADER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle">
+                                                        <span style="font-size: 10px;">Member Rejection</span>
+                                                        <br />
+                                                        <span style="font-size: 20px; font-weight: bold;">From Line Manager</span>
+                                                    </td>
+                                                    <td valign="middle" align="right">
+                                                        <img src="/logo.png?company=${object.applicant_id.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.applicant_id.company_id.name}" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- CONTENT -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="top" style="font-size: 13px;">
+                                                        <div>
+                                                            Dear ${object.applicant_line_id.name},
+                                                            <br />
+                                                            <br />
+                                                            You have been rejected to this imprest application ${object.applicant_imprest_application_line_id.imprest_application_id} by your line manager because of ${object.reason}.
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- FOOTER -->
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- POWERED BY -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+                                <tr>
+                                    <td style="text-align: center; font-size: 13px;">
+                                        Powered by
+                                        <a target="_blank" href="https://www.mst.or.tz?utm_source=db&amp;utm_medium=auth" style="color: #875A7B;">Marie Stopes Tanzania</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+        </record>
+
+        <record id="email_template_mst_reject_retirement" model="mail.template">
+            <field name="name">Reject Retirement</field>
+            <field name="model_id" ref="tenmet_imprest.model_imprest_retirement" />
+            <field name="subject">${object.name} Appication Reject</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                                <tbody>
+                                    <!-- HEADER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle">
+                                                        <span style="font-size: 10px;">Retirement</span>
+                                                        <br />
+                                                        <span style="font-size: 20px; font-weight: bold;">From ${object.retirement_applicant.name}</span>
+                                                    </td>
+                                                    <td valign="middle" align="right">
+                                                        <img src="/logo.png?company=${object.retirement_applicant.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.retirement_applicant.company_id.name}" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- CONTENT -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="top" style="font-size: 13px;">
+                                                        <div>
+                                                            Dear ${object.retirement_applicant.name},
+                                                            <br />
+                                                            <br />
+                                                            Your Retirement is reject.
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;">
+                                                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- FOOTER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle" align="left">${object.retirement_applicant.company_id.name}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="middle" align="left" style="opacity: 0.7;">
+                                                        ${object.retirement_applicant.company_id.phone}
+                    % if object.retirement_applicant.company_id.email
+                        |
+                                                        <a href="'mailto:%s' % ${object.retirement_applicant.company_id.email}" style="text-decoration:none; color: #454748;">${object.retirement_applicant.company_id.email}</a>
+                                                        % endif
+                    % if object.retirement_applicant.company_id.website
+                        |
+                                                        <a href="'%s' % ${object.retirement_applicant.company_id.website}" style="text-decoration:none; color: #454748;">${object.retirement_applicant.company_id.website}</a>
+                                                        % endif
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- POWERED BY -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+                                <tr>
+                                    <td style="text-align: center; font-size: 13px;">
+                                        Powered by
+                                        <a target="_blank" href="https://www.mst.or.tz?utm_source=db&amp;utm_medium=auth" style="color: #875A7B;">Marie Stopes Tanzania</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+        </record>
+    </data>
+</odoo>

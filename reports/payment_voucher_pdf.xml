@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <report id="payment_voucher_pdf_report"
+                model="payment.requisition"
+                string="Payment Voucher"
+                report_type="qweb-pdf"
+                name="tenmet_payment_requisition.report_payment_voucher"
+                file="tenmet_payment_requisition.report_payment_voucher"
+                print_report_name="'Payment Voucher for - %s' % (object.name)"
+                groups="tenmet_imprest.group_imprest_accountant"
+                menu="True"/>
+
+        <template id="report_payment_voucher_document">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+
+                            <h3><strong><center>PAYMENT VOUCHER</center></strong></h3>
+
+                            <br></br>
+
+                            <strong>For Payment Requisition Number:</strong><span t-field="o.name"/>
+
+<!--                            <br></br>-->
+
+                            <div class="row mt64">
+                                <div class="col-6" t-if="o.requestor">
+                                    <strong>Payee: </strong> <span t-field="o.requestor"
+                                                                   t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                                </div>
+                                <div class="col-6" t-if="o.date">
+                                    <strong>Date: </strong> <span t-field="o.date"/>
+                                </div>
+                            </div>
+
+                            <br></br>
+                            <br></br>
+
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th><span>Account</span></th>
+                                        <th><span>Particulars</span></th>
+                                        <th><span>Amount (Tshs)</span></th>
+                                    </tr>
+                                </thead>
+                                <body>
+                                    <tr t-foreach="o.payment_requisition_lines" t-as="req">
+                                        <td><span t-field="req.account_id"/> </td>
+                                        <td><span t-field="req.name"/> </td>
+                                        <td><span t-field="req.line_total" t-options='{"widget": "float", "precision": 2}'/> </td>
+                                    </tr>
+                                </body>
+                            </table>
+
+                            <div id="total" class="row justify-content-end">
+                                <div class="col-4">
+                                    <table class="table table-sm">
+                                        <tr class="border-black o_total">
+                                            <td><strong>Requisition Total</strong></td>
+                                            <td class="text-right">
+                                                <span t-field="o.requisition_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <br></br>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Cash/Cheque #________________________________________________: </strong>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Amount in Words: </strong> <span t-field="o.requisition_total_in_words"/>
+                                </div>
+                            </div>
+
+                            <br></br>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Prepared By:________________________________________________</strong>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Date:________________________________________________</strong>
+                                </div>
+                            </div>
+
+                            <br></br>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Checked By:________________________________________________</strong>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Date:________________________________________________</strong>
+                                </div>
+                            </div>
+
+                            <br></br>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Approved By:________________________________________________</strong>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Date:________________________________________________</strong>
+                                </div>
+                            </div>
+
+                            <br></br>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Received By:________________________________________________</strong>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Date:________________________________________________</strong>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <template id="report_payment_voucher">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="tenmet_payment_requisition.report_payment_voucher_document"/>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>
